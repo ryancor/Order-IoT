@@ -11,6 +11,14 @@ using namespace std;
 #define MAX_PATH        4096
 #define FILE_PATH       "/tmp/coupon"
 
+void clear_cin() {
+  for(int i = 0; i < 1; i++) {
+    std::cin.clear();
+    std::cin.ignore();
+    continue;
+  }
+}
+
 void list_choices() {
   std::cout << "1. List Food" << std::endl <<
   "2. Add item" << std::endl <<
