@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <ctime>
 #include <stdio.h>
 
 using namespace std;
@@ -71,9 +72,13 @@ char *split_up_money(string s) {
 
 void receipt(float total_price, string food_array) {
   FILE *fp;
+  const time_t ctt = time(0);
+
   fp = fopen("receipt.txt", "w+");
+  fprintf(fp, "Date of Order: %s", asctime(localtime(&ctt)));
   fprintf(fp, "Total Price $%f\n\n", total_price);
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
+
   fclose(fp);
 }
 
