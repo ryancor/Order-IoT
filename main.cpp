@@ -6,33 +6,30 @@
 
 using namespace std;
 
+char food[4][100] = {"1. Hamburger : $ 3.25", "2. Grilled-Cheese : $ 2.50",
+            "3. Fries : $ 2.00", "4. Soda : $ 1.00"};
+
 typedef struct {
   string food_1;
-  string food_2;
-  string food_3;
-  string food_4;
   int price_1;
-  int price_2;
-  int price_3;
-  int price_4;
 } split_items;
 
-int main() {
-  string menu_choice, food_choice, remove_choice;
-  float total = 0.00;
-  string ordered;
-  char food[4][100] = {"1. Hamburger : $ 3.25", "2. Grilled-Cheese : $ 2.50",
-              "3. Fries : $ 2.00", "4. Soda : $ 1.00"};
-
+string pick_food(int x) {
   split_items f;
-  f.food_1 = split_up_item(food[0]) + ", ";
-  f.food_2 = split_up_item(food[1]) + ", ";
-  f.food_3 = split_up_item(food[2]) + ", ";
-  f.food_4 = split_up_item(food[3]) + ", ";
-  f.price_1 = atof(split_up_money(food[0]));
-  f.price_2 = atof(split_up_money(food[1]));
-  f.price_3 = atof(split_up_money(food[2]));
-  f.price_4 = atof(split_up_money(food[3]));
+  f.food_1 = split_up_item(food[x]) + ", ";
+  return f.food_1;
+}
+
+int pick_price(int x) {
+  split_items f;
+  f.price_1 = atof(split_up_money(food[x]));
+  return f.price_1;
+}
+
+int main() {
+  string menu_choice, ordered;
+  int food_choice, remove_choice;
+  float total = 0.00;
 
   while(1) {
     std::cout << "Total Price: $" << std::fixed <<
@@ -49,62 +46,40 @@ int main() {
         std::cout << food[i] << std::endl;
       }
       cout << std::endl;
-
     } else if(menu_choice == "2") {
       cout << std::endl << "food>> ";
-      getline(cin, food_choice);
+      std::cin >> food_choice;
 
-      if(food_choice == "1") {
-        std::cout << "Adding " << f.food_1 << " to your order." << endl;
-        total += f.price_1;
-        ordered += f.food_1;
-      } else if(food_choice == "2") {
-        std::cout << "Adding " << f.food_2 << " to your order." << endl;
-        total += f.price_2;
-        ordered += f.food_2;
-      } else if(food_choice == "3") {
-        std::cout << "Adding " << f.food_3 << " to your order." << endl;
-        total += f.price_3;
-        ordered += f.food_3;
-      } else if(food_choice == "4") {
-        std::cout << "Adding " << f.food_4 << " to your order." << endl;
-        total += f.price_4;
-        ordered += f.food_4;
+      if((food_choice-1) < sizeof(food)/100) {
+        std::cout << "Adding " << pick_food(food_choice-1) << " to your order." << endl;
+        total += pick_price(food_choice-1);
+        ordered += pick_food(food_choice-1);
+        clear_cin();
       } else {
         std::cout << "Invalid Choice." << std::endl;
+        clear_cin();
       }
     } else if(menu_choice == "3") {
       if(total > 0.01) {
         cout << std::endl << "remove>> ";
-        getline(cin, remove_choice);
+        cin >> remove_choice;
 
-        // 0000000100007148         cmp        esi, 0x0
-        if(remove_choice == "1" && ordered.find(f.food_1) != string::npos) {
-          std::cout << "Removing " << f.food_1 << " from your order." << endl;
-          total -= f.price_1;
+        if((remove_choice-1) < sizeof(food)/100) {
+          // 0000000100007148         cmp        esi, 0x0
+          if(ordered.find(pick_food(remove_choice-1)) != string::npos) {
+            std::cout << "Removing " << pick_food(remove_choice-1) << " from your order." << endl;
+            total -= pick_price(remove_choice-1);
 
-          size_t pos = ordered.find(f.food_1);
-          ordered.erase(pos, f.food_1.length());
-        } else if(remove_choice == "2" && ordered.find(f.food_2) != string::npos) {
-          std::cout << "Removing " << f.food_2 << " from your order." << endl;
-          total -= f.price_2;
-
-          size_t pos = ordered.find(f.food_2);
-          ordered.erase(pos, f.food_2.length());
-        } else if(remove_choice == "3" && ordered.find(f.food_3) != string::npos) {
-          std::cout << "Removing " << f.food_3 << " from your order." << endl;
-          total -= f.price_3;
-
-          size_t pos = ordered.find(f.food_3);
-          ordered.erase(pos, f.food_3.length());
-        } else if(remove_choice == "4" && ordered.find(f.food_4) != string::npos) {
-          std::cout << "Removing " << f.food_4 << " from your order." << endl;
-          total -= f.price_4;
-
-          size_t pos = ordered.find(f.food_4);
-          ordered.erase(pos, f.food_4.length());
+            size_t pos = ordered.find(pick_food(remove_choice-1));
+            ordered.erase(pos, pick_food(remove_choice-1).length());
+            clear_cin();
+          } else {
+            std::cout << "You haven't ordered this item." << std::endl;
+            clear_cin();
+          }
         } else {
           std::cout << "Invalid Choice." << std::endl;
+          clear_cin();
         }
       } else {
         std::cout << "You haven't ordered anything." << std::endl;
