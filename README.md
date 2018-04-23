@@ -1,2 +1,3 @@
 # cpp-algorithms
-1. g++ main.cpp helper.cpp -o main
+1. make
+2. make clean
