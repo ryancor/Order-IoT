@@ -39,7 +39,7 @@ string split_up_item(string s) {
 
   // storing first index to string
   std::transform(item.begin(), item.end(), std::back_inserter(r_item), convert);
-  for ( int i = 0 ; i < r_item.size() ; i++ ) {
+  for(int i = 0 ; i < r_item.size() ; i++) {
     food_item = r_item[0];
   }
   return food_item;
@@ -60,7 +60,7 @@ char *split_up_money(string s) {
 
   // storing third index to string to be converted to integer
   std::transform(item.begin(), item.end(), std::back_inserter(m_item), convert);
-  for ( int i = 0 ; i < m_item.size() ; i++ ) {
+  for(int i = 0 ; i < m_item.size() ; i++) {
     money_item = m_item[2];
   }
   return money_item;
