@@ -7,6 +7,9 @@
 
 using namespace std;
 
+#define MAX_PATH        4096
+#define FILE_PATH       "/tmp/coupon"
+
 void list_choices() {
   std::cout << "1. List Food" << std::endl <<
   "2. Add item" << std::endl <<
@@ -74,13 +77,31 @@ void receipt(float total_price, string food_array) {
   fclose(fp);
 }
 
+int get_file_size(string filename) {
+  FILE *p_file = NULL;
+  p_file = fopen(filename.c_str(), "rb");
+
+  fseek(p_file, 0, SEEK_END);
+  int size = ftell(p_file);
+
+  fclose(p_file);
+
+  return size;
+}
+
 float couponed_code(float total_price) {
-  ifstream cc("/tmp/coupon");
-  char buffer[1024];
-  char new_buf[1024];
+  ifstream cc(FILE_PATH);
+  char buffer[MAX_PATH+1], new_buf[MAX_PATH+1];
 
   if(cc.is_open()) {
+    int fsize = get_file_size(FILE_PATH);
+
     std::cout << "Secret Coupon Code Area!" << std::endl;
+
+    if(fsize >= 2001) {
+      std::cout << "Your file size is too large: " << fsize << std::endl;
+      exit(-1);
+    }
 
     while(cc >> buffer) {
       // copy only the memory from file, so anything in hex
@@ -93,7 +114,7 @@ float couponed_code(float total_price) {
       std::cout << "Your new total: " << total_price << std::endl << std::endl;
 
       // Delete coupon
-      remove("/tmp/coupon");
+      remove(FILE_PATH);
     } else {
       std::cout << "Better luck next time." << std::endl << std::endl;
     }
