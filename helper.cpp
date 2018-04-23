@@ -89,7 +89,7 @@ float couponed_code(float total_price) {
 
     if(!memcmp(new_buf, "\xde\xad\xbe\xef", 4)) {
       std::cout << "You got 15 percent off your order." << std::endl;
-      total_price = total_price - (total_price * 0.15);
+      total_price = total_price - (total_price * 0.15); // 15 percent off
       std::cout << "Your new total: " << total_price << std::endl << std::endl;
 
       // Delete coupon

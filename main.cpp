@@ -21,10 +21,10 @@ int main() {
               "3. Fries : $ 2.00", "4. Soda : $ 1.00"};
 
   split_food_items f;
-  f.food_1 = split_up_item(food[0]);
-  f.food_2 = split_up_item(food[1]);
-  f.food_3 = split_up_item(food[2]);
-  f.food_4 = split_up_item(food[3]);
+  f.food_1 = split_up_item(food[0]) + ", ";
+  f.food_2 = split_up_item(food[1]) + ", ";
+  f.food_3 = split_up_item(food[2]) + ", ";
+  f.food_4 = split_up_item(food[3]) + ", ";
 
   while(1) {
     std::cout << "Total Price: $" << std::fixed <<
@@ -49,19 +49,19 @@ int main() {
       if(food_choice == "1") {
         std::cout << "Adding " << f.food_1 << " to your order." << endl;
         total += atof(split_up_money(food[0]));
-        ordered += f.food_1 + ", ";
+        ordered += f.food_1;
       } else if(food_choice == "2") {
         std::cout << "Adding " << f.food_2 << " to your order." << endl;
         total += atof(split_up_money(food[1]));
-        ordered += f.food_2 + ", ";
+        ordered += f.food_2;
       } else if(food_choice == "3") {
         std::cout << "Adding " << f.food_3 << " to your order." << endl;
         total += atof(split_up_money(food[2]));
-        ordered += f.food_3 + ", ";
+        ordered += f.food_3;
       } else if(food_choice == "4") {
         std::cout << "Adding " << f.food_4 << " to your order." << endl;
         total += atof(split_up_money(food[3]));
-        ordered += f.food_4 + ", ";
+        ordered += f.food_4;
       } else {
         std::cout << "Invalid Choice." << std::endl;
       }
