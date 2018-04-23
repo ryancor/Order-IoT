@@ -88,12 +88,14 @@ void receipt(float total_price, string food_array) {
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
 
   fclose(fp);
+  // Send data to an API endpoint.
 }
 
 int get_file_size(string filename) {
   FILE *p_file = NULL;
   p_file = fopen(filename.c_str(), "rb");
 
+  // measure file in bytes
   fseek(p_file, 0, SEEK_END);
   int size = ftell(p_file);
 
@@ -124,7 +126,7 @@ float couponed_code(float total_price) {
     if(!memcmp(new_buf, "\xde\xad\xbe\xef", 4)) {
       std::cout << "You got 15 percent off your order." << std::endl;
       total_price = total_price - (total_price * 0.15); // 15 percent off
-      std::cout << "Your new total: " << total_price << std::endl << std::endl;
+      std::cout << "Your new total: $" << total_price << std::endl << std::endl;
 
       // Delete coupon
       remove(FILE_PATH);
