@@ -67,7 +67,6 @@ int main() {
       }
     } else if(menu_choice == "3") {
       if(total > 0.01) {
-        // 0000000100006f0a is where to break here
         cout << std::endl << "remove>> ";
         getline(cin, remove_choice);
 
