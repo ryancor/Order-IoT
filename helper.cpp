@@ -83,6 +83,7 @@ float couponed_code(float total_price) {
     std::cout << "Secret Coupon Code Area!" << std::endl;
 
     while(cc >> buffer) {
+      // copy only the memory from file, so anything in hex
       std::memcpy(new_buf, buffer, sizeof(buffer));
     }
 
