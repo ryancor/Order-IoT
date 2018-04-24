@@ -85,7 +85,7 @@ int main() {
         std::cout << "You haven't ordered anything." << std::endl;
       }
     } else if(menu_choice == "4") {
-      std::cout << "Storing receipt to text file.." << std::endl;
+      std::cout << "Storing receipt to text file.." << std::endl << std::endl;
       receipt(total, ordered);
     } else if(menu_choice == "5") {
       exit(-1);

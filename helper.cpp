@@ -3,13 +3,21 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <istream>
+#include <ostream>
 #include <ctime>
+#include <boost/filesystem.hpp>
+#include <boost/asio.hpp>
+#include <sfml/Network/TcpSocket.hpp>
+#include <sfml/Network/IpAddress.hpp>
 #include <stdio.h>
 
 using namespace std;
 
 #define MAX_PATH        4096
 #define FILE_PATH       "/tmp/coupon"
+#define IP              "192.168.0.19"
+#define PORT            5000
 
 void clear_cin() {
   for(int i = 0; i < 1; i++) {
@@ -78,17 +86,58 @@ char *split_up_money(string s) {
   return money_item;
 }
 
+bool is_host_up(const string& address, int port) {
+  sf::TcpSocket socket;
+  bool open = (socket.connect(sf::IpAddress(address), port) == sf::Socket::Done);
+  socket.disconnect();
+  return open;
+}
+
+void post_data(const time_t seconds, float total_price, string food) {
+  boost::asio::ip::tcp::iostream stream;
+
+  if(is_host_up(IP, PORT)) {
+    std::stringstream ss;
+    ss << seconds;
+    string content = "time=";
+    content += ss.str();
+    content +="&total_price=";
+    content += to_string(total_price);
+    content += "&food=";
+    content += food;
+
+    stream.connect(IP, to_string(PORT));
+    stream << "POST /firmware-api/v1/place_order?" << content << " HTTP/1.1\r\n";
+    stream << "Host: " << IP << ":" << to_string(PORT) << "\r\n";
+    stream << "Content-Type: application/x-www-form-urlencoded; charset=utf-8\r\n";
+    stream << "Connection: close\r\n\r\n";
+    stream << "Content-Length: 13\r\n";
+
+    stream.flush();
+    std::cout << stream.rdbuf();
+  } else {
+    std::cout << "Can't connect to API endpoint." << std::endl << std::endl;
+  }
+}
+
 void receipt(float total_price, string food_array) {
   FILE *fp;
   const time_t ctt = time(0);
 
+  // Give a customer number by rand() & query name from computer
   fp = fopen("receipt.txt", "w+");
   fprintf(fp, "Date of Order: %s", asctime(localtime(&ctt)));
   fprintf(fp, "Total Price $%f\n\n", total_price);
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
 
   fclose(fp);
-  // Send data to an API endpoint.
+
+  try {
+    post_data(ctt, total_price, food_array.c_str());
+  } catch(std::exception& e) {
+    std::cout << "Couldn't make a successful request." << std::endl;
+    std::cerr << e.what() << std::endl;
+  }
 }
 
 int get_file_size(string filename) {
