@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-I.
+CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
 DEPS = helper.hpp
 OBJ = main.o helper.o
 
