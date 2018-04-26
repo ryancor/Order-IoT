@@ -28,10 +28,12 @@ int pick_price(int x) {
 
 int main() {
   string menu_choice, ordered;
+  unsigned long cust_id = customer_id();
   int food_choice, remove_choice;
   float total = 0.00;
 
   while(1) {
+    std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
     std::cout << "Total Price: $" << std::fixed <<
     std::setprecision(2) << total << endl;
     std::cout << "Ordered: " << ordered << endl << endl;
@@ -86,7 +88,7 @@ int main() {
       }
     } else if(menu_choice == "4") {
       std::cout << "Storing receipt to text file.." << std::endl << std::endl;
-      receipt(total, ordered);
+      receipt(cust_id, total, ordered);
     } else if(menu_choice == "5") {
       exit(-1);
     } else if(menu_choice == "6") {

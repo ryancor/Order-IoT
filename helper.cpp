@@ -22,6 +22,18 @@ void clear_cin() {
   }
 }
 
+unsigned long customer_id() {
+  unsigned long num;
+
+  /* initialize random seed: */
+  srand(time(NULL));
+
+  /* generate secret number between 1 and 0x80400000: */
+  num = rand() % 0x80400000 + 1;
+
+  return num;
+}
+
 void list_choices() {
   std::cout << "1. List Food" << std::endl <<
   "2. Add item" << std::endl <<
@@ -81,12 +93,13 @@ char *split_up_money(string s) {
   return money_item;
 }
 
-void receipt(float total_price, string food_array) {
+void receipt(unsigned long c_id, float total_price, string food_array) {
   FILE *fp;
   const time_t ctt = time(0);
 
   // Give a customer number by rand() & query name from computer
   fp = fopen("receipt.txt", "w+");
+  fprintf(fp, "Date of Order: #%lu\n", c_id);
   fprintf(fp, "Date of Order: %s", asctime(localtime(&ctt)));
   fprintf(fp, "Total Price $%f\n\n", total_price);
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
@@ -94,7 +107,7 @@ void receipt(float total_price, string food_array) {
   fclose(fp);
 
   try {
-    post_data(ctt, total_price, food_array.c_str());
+    post_data(c_id, ctt, total_price, food_array.c_str());
   } catch(std::exception& e) {
     std::cout << "Couldn't make a successful request." << std::endl;
     std::cerr << e.what() << std::endl;
