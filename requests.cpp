@@ -10,7 +10,7 @@
 
 using namespace std;
 
-#define IP              "192.168.0.19"
+#define IP              "192.168.0.12"
 #define PORT            5000
 
 bool is_host_up(const string& address, int port) {
@@ -21,12 +21,14 @@ bool is_host_up(const string& address, int port) {
 }
 
 // We use sfml
-void post_data(const time_t seconds, float total_price, string food) {
+void post_data(const time_t seconds, unsigned long c_id, float total_price, string food) {
   if(is_host_up(IP, PORT)) {
     std::stringstream ss;
     ss << seconds;
     string content = "time=";
     content += ss.str();
+    content += "&cust_id=";
+    content += to_string(c_id);
     content +="&total_price=";
     content += to_string(total_price);
     content += "&food=";
