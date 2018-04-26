@@ -97,9 +97,9 @@ void receipt(unsigned long c_id, float total_price, string food_array) {
   FILE *fp;
   const time_t ctt = time(0);
 
-  // Give a customer number by rand() & query name from computer
+  // query name from computer for customer name
   fp = fopen("receipt.txt", "w+");
-  fprintf(fp, "Date of Order: #%lu\n", c_id);
+  fprintf(fp, "Customer ID: #%lu\n", c_id);
   fprintf(fp, "Date of Order: %s", asctime(localtime(&ctt)));
   fprintf(fp, "Total Price $%f\n\n", total_price);
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
