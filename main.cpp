@@ -3,6 +3,7 @@
 #include <string>
 #include <iomanip>
 #include "include/helper.hpp"
+#include "include/requests.hpp"
 
 using namespace std;
 
@@ -32,8 +33,10 @@ int main() {
   int food_choice, remove_choice;
   float total = 0.00;
 
+  std::cout << "Welcome " << user_request() << std::endl;
+  std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
+
   while(1) {
-    std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
     std::cout << "Total Price: $" << std::fixed <<
     std::setprecision(2) << total << endl;
     std::cout << "Ordered: " << ordered << endl << endl;
@@ -88,7 +91,7 @@ int main() {
       }
     } else if(menu_choice == "4") {
       std::cout << "Storing receipt to text file.." << std::endl << std::endl;
-      receipt(cust_id, total, ordered);
+      receipt(cust_id, user_request(), total, ordered);
     } else if(menu_choice == "5") {
       exit(-1);
     } else if(menu_choice == "6") {

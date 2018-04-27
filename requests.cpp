@@ -2,6 +2,10 @@
 #include <string>
 #include <ostream>
 #include <ctime>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <boost/filesystem.hpp>
 #include <boost/asio.hpp>
 #include <sfml/Network.hpp>
@@ -10,8 +14,10 @@
 
 using namespace std;
 
-#define IP              "192.168.0.12"
-#define PORT            5000
+#define IP               "192.168.0.12"
+#define PORT             5000
+#define HOST_NAME_MAX    64
+#define LOGIN_NAME_MAX   84
 
 bool is_host_up(const string& address, int port) {
   sf::TcpSocket socket;
@@ -21,7 +27,7 @@ bool is_host_up(const string& address, int port) {
 }
 
 // We use sfml
-void post_data(const time_t seconds, unsigned long c_id, float total_price, string food) {
+void post_data(const time_t seconds, unsigned long c_id,  char *name, float total_price, string food) {
   if(is_host_up(IP, PORT)) {
     std::stringstream ss;
     ss << seconds;
@@ -29,6 +35,8 @@ void post_data(const time_t seconds, unsigned long c_id, float total_price, stri
     content += ss.str();
     content += "&cust_id=";
     content += to_string(c_id);
+    content += "&name=";
+    content += name;
     content +="&total_price=";
     content += to_string(total_price);
     content += "&food=";
@@ -73,4 +81,23 @@ void boost_post_data(const time_t seconds, float total_price, string food) {
 
   stream.flush();
   std::cout << stream.rdbuf();
+}
+
+char *user_request() {
+  char *hostname = new char[HOST_NAME_MAX];
+  char *username = new char[LOGIN_NAME_MAX];
+  int result;
+
+  result = gethostname(hostname, HOST_NAME_MAX);
+  if(result) {
+    perror("gethostname");
+    strcpy(hostname, "unknown");
+  }
+
+  result = getlogin_r(username, LOGIN_NAME_MAX);
+  if(result) {
+    perror("getlogin_r");
+    strcpy(username, "unknown");
+  }
+  return username;
 }
