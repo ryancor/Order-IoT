@@ -93,13 +93,14 @@ char *split_up_money(string s) {
   return money_item;
 }
 
-void receipt(unsigned long c_id, float total_price, string food_array) {
+void receipt(unsigned long c_id, char *name, float total_price, string food_array) {
   FILE *fp;
   const time_t ctt = time(0);
 
   // query name from computer for customer name
   fp = fopen("receipt.txt", "w+");
   fprintf(fp, "Customer ID: #%lu\n", c_id);
+  fprintf(fp, "Customer: %s\n", name);
   fprintf(fp, "Date of Order: %s", asctime(localtime(&ctt)));
   fprintf(fp, "Total Price $%f\n\n", total_price);
   fprintf(fp, "Food Ordered: %s\n", food_array.c_str());
@@ -107,7 +108,7 @@ void receipt(unsigned long c_id, float total_price, string food_array) {
   fclose(fp);
 
   try {
-    post_data(c_id, ctt, total_price, food_array.c_str());
+    post_data(ctt, c_id, name, total_price, food_array.c_str());
   } catch(std::exception& e) {
     std::cout << "Couldn't make a successful request." << std::endl;
     std::cerr << e.what() << std::endl;
