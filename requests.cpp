@@ -11,10 +11,11 @@
 #include <sfml/Network.hpp>
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Network/IpAddress.hpp>
+#include "include/ip.hpp"
 
 using namespace std;
 
-#define IP               "192.168.0.12"
+#define IP               get_IP()
 #define PORT             5000
 #define HOST_NAME_MAX    64
 #define LOGIN_NAME_MAX   84
