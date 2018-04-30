@@ -15,7 +15,8 @@
 
 using namespace std;
 
-#define IP               get_IP()
+IPP ip1;
+#define IP               ip1.get_IP()
 #define PORT             5000
 #define HOST_NAME_MAX    64
 #define LOGIN_NAME_MAX   84
@@ -63,7 +64,7 @@ void post_data(const time_t seconds, unsigned long c_id,  char *name, float tota
         std::cout << "Request failed." <<  std::endl << std::endl;
     }
   } else {
-    std::cout << "Can't connect to API endpoint: " << get_IP() << std::endl << std::endl;
+    std::cout << "Can't connect to API endpoint: " << IP << std::endl << std::endl;
   }
 }
 

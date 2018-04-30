@@ -6,7 +6,9 @@
 #include <string.h>
 #include <arpa/inet.h>
 
-std::string get_IP() {
+#include "include/ip.hpp"
+
+std::string IPP::get_IP(void) {
   struct ifaddrs *ifAddrStruct = NULL;
   struct ifaddrs *ifa = NULL;
   void *tmpAddrPtr = NULL;
