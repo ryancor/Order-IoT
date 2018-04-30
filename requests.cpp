@@ -63,7 +63,7 @@ void post_data(const time_t seconds, unsigned long c_id,  char *name, float tota
         std::cout << "Request failed." <<  std::endl << std::endl;
     }
   } else {
-    std::cout << "Can't connect to API endpoint." << std::endl << std::endl;
+    std::cout << "Can't connect to API endpoint: " << get_IP() << std::endl << std::endl;
   }
 }
 

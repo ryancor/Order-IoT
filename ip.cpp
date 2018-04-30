@@ -21,10 +21,8 @@ std::string get_IP() {
 
       inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
       // Compare first nums in addr
-      if(strncmp(addressBuffer, "192", 3) == 0) {
+      if(strstr(addressBuffer, "192") != NULL) {
         strcpy(en0_ip, addressBuffer);
-      } else {
-        strcpy(en0_ip, "192.168.0.8");
       }
     }
   }
