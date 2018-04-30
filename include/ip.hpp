@@ -1,3 +1,6 @@
 #include <string>
 
-std::string get_IP();
+class IPP {
+  public:
+    std::string get_IP(void);
+};
