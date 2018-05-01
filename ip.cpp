@@ -3,7 +3,6 @@
 #include <sys/types.h>
 #include <ifaddrs.h>
 #include <netinet/in.h>
-#include <string.h>
 #include <arpa/inet.h>
 
 #include "include/ip.hpp"
@@ -23,7 +22,7 @@ std::string IPP::get_IP(void) {
 
       inet_ntop(AF_INET, tmpAddrPtr, addressBuffer, INET_ADDRSTRLEN);
       // Compare first nums in addr
-      if(strstr(addressBuffer, "192") != NULL) {
+      if(strstr(ifa->ifa_name, "en0") != NULL || strstr(addressBuffer, "192") != NULL) {
         strcpy(en0_ip, addressBuffer);
       }
     }
