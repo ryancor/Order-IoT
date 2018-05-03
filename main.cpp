@@ -23,7 +23,7 @@ string pick_food(int x) {
 
 int pick_price(int x) {
   split_items f;
-  f.price_1 = atof(split_up_money(food[x]));
+  f.price_1 = atof(split_up_char(food[x], 2));
   return f.price_1;
 }
 
@@ -34,6 +34,13 @@ int main() {
   float total = 0.00;
 
   std::cout << "Welcome " << user_request() << std::endl;
+
+  if(open_or_closed() == 1) {
+    std::cout << "Open: " << "true" << std::endl;
+  } else {
+    std::cout << "Open: " << "false" << std::endl;
+  }
+
   std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
 
   while(1) {
