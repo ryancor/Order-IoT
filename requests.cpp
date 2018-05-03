@@ -12,6 +12,7 @@
 #include <sfml/Network/TcpSocket.hpp>
 #include <sfml/Network/IpAddress.hpp>
 #include "include/ip.hpp"
+#include "include/helper.hpp"
 
 using namespace std;
 
@@ -66,6 +67,27 @@ void post_data(const time_t seconds, unsigned long c_id,  char *name, float tota
   } else {
     std::cout << "Can't connect to API endpoint: " << IP << std::endl << std::endl;
   }
+}
+
+bool open_or_closed() {
+  if(is_host_up(IP, PORT)) {
+    // prepare the request
+    sf::Http::Request request("/firmware-api/v1/hours", sf::Http::Request::Get);
+
+    // send the request
+    sf::Http server(IP, 5000);
+    sf::Http::Response response = server.sendRequest(request);
+
+    if (response.getStatus() == sf::Http::Response::Ok) {
+      char bl[4];
+      strncpy(bl, split_up_char(response.getBody(), 2), 4);
+
+      if(strncmp(bl, "true", 4) == 0) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 // we aren't using boost yet
