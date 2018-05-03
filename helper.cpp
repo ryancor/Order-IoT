@@ -72,13 +72,13 @@ string split_up_item(string s) {
   return food_item;
 }
 
-char *split_up_money(string s) {
+char *split_up_char(string s, int num) {
   istringstream iss(s, istringstream::in);
   string buf;
   std::vector<std::string> item;
   // converting vector to char array
-  std::vector<char*>  m_item;
-  char *money_item;
+  std::vector<char*>  c_item;
+  char *char_item;
 
   while(iss >> buf) {
       iss >> buf;
@@ -86,11 +86,11 @@ char *split_up_money(string s) {
   }
 
   // storing third index to string to be converted to integer
-  std::transform(item.begin(), item.end(), std::back_inserter(m_item), convert);
-  for(int i = 0 ; i < m_item.size() ; i++) {
-    money_item = m_item[2];
+  std::transform(item.begin(), item.end(), std::back_inserter(c_item), convert);
+  for(int i = 0 ; i < c_item.size() ; i++) {
+    char_item = c_item[num];
   }
-  return money_item;
+  return char_item;
 }
 
 void receipt(unsigned long c_id, char *name, float total_price, string food_array) {
