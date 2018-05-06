@@ -33,6 +33,14 @@ int main() {
   int food_choice, remove_choice;
   float total = 0.00;
 
+  #ifdef __unix__
+  #include "lib/pal.h"
+
+  if(isPalindrome(user_request()) == 1) {
+    std::cout << "You have a very special name ;)" << std::endl;
+  }
+  
+  #endif
   std::cout << "Welcome " << user_request() << std::endl;
 
   if(open_or_closed() == 1) {
