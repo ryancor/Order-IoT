@@ -1,3 +1,4 @@
 main
 receipt.txt
 main.dSYM
+lib/libpal.so
