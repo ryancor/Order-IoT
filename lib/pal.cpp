@@ -1,4 +1,4 @@
-#include "pal.h"
+#include "pal.hpp"
 #include <string.h>
 
 bool isPalindrome(char* word) {
