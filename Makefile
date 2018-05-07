@@ -1,14 +1,15 @@
 OS := $(shell uname)
 CC=g++
-CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
+ifeq ($(OS),Linux)
+	CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I. -Wall -L $(PWD)/lib, -rpath=$(PWD)/lib/ -lpal
+else
+	CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
+endif
 DEPS = helper.hpp requests.hpp ip.hpp
 OBJ = main.o helper.o requests.o ip.o
 
 %.o: %.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
-	ifeq ($(OS),Linux)
-		$(CC) -fPIC -c -Wall -shared lib/pal.cpp -o lib/libpal.so
-	endif
 
 main: $(OBJ)
 	g++ -o $@ $^ $(CFLAGS)
