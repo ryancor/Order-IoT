@@ -1,7 +1,7 @@
 OS := $(shell uname)
 CC=g++
 ifeq ($(OS),Linux)
-	CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I. -L  -Wall -L $(PWD)/lib -Wl, -rpath=$(PWD)/lib/ -lpal
+	CFLAGS=-lsfml-network -lsfml-system -I. -Wall -L $(PWD)/lib -Wl,-rpath=$(PWD)/lib/ -lpal
 else
 	CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
 endif
