@@ -4,6 +4,7 @@
 #include <iomanip>
 #include "include/helper.hpp"
 #include "include/requests.hpp"
+#include "include/sql.hpp"
 
 using namespace std;
 
@@ -42,6 +43,9 @@ int main() {
 
   #endif
   std::cout << "Welcome " << user_request() << std::endl;
+
+  // Grabbing data from mysql
+  send_data();
 
   if(open_or_closed() == 1) {
     std::cout << "Open: " << "true" << std::endl;
