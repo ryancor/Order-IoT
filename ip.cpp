@@ -5,6 +5,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+#ifdef __unix__
+#include <string.h>
+#endif
+
 #include "include/ip.hpp"
 
 std::string IPP::get_IP(void) {

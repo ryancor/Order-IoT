@@ -7,6 +7,13 @@
 #include <ostream>
 #include <ctime>
 #include <stdio.h>
+
+#ifdef __unix__
+#include <string.h>
+#include <cstdlib.h>
+#include <algorithm>
+#endif
+
 #include "include/requests.hpp"
 
 using namespace std;

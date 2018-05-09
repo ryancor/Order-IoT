@@ -6,11 +6,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+
+#ifdef __APPLE__
 #include <boost/filesystem.hpp>
 #include <boost/asio.hpp>
-#include <sfml/Network.hpp>
-#include <sfml/Network/TcpSocket.hpp>
-#include <sfml/Network/IpAddress.hpp>
+#endif
+
+#ifdef __unix__
+#include <sstream>
+#include <string.h>
+#endif
+
+#include <SFML/Network.hpp>
+#include <SFML/Network/TcpSocket.hpp>
+#include <SFML/Network/IpAddress.hpp>
 #include "include/ip.hpp"
 #include "include/helper.hpp"
 
