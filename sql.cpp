@@ -36,7 +36,7 @@ void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PA
       finish_with_error(con);
   }
 
-  if (mysql_query(con, "INSERT INTO Orders VALUES(2,'3. Fries : $ 2.00')")) {
+  if (mysql_query(con, "INSERT INTO Orders VALUES(3,'3. Fries : $ 2.00')")) {
       finish_with_error(con);
   }
 
