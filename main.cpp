@@ -2,6 +2,11 @@
 #include <sstream>
 #include <string>
 #include <iomanip>
+
+#ifdef __unix__
+#include <stdlib.h>
+#endif
+
 #include "include/helper.hpp"
 #include "include/requests.hpp"
 #include "include/sql.hpp"
