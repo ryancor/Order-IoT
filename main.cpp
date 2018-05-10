@@ -13,9 +13,6 @@
 
 using namespace std;
 
-char food[4][100] = {"1. Hamburger : $ 3.25", "2. Grilled-Cheese : $ 2.50",
-            "3. Fries : $ 2.00", "4. Soda : $ 1.00"};
-
 typedef struct {
   string food_1;
   int price_1;
@@ -23,13 +20,13 @@ typedef struct {
 
 string pick_food(int x) {
   split_items f;
-  f.food_1 = split_up_item(food[x]) + ", ";
+  f.food_1 = split_up_item(DataGet()[x]) + ", ";
   return f.food_1;
 }
 
 int pick_price(int x) {
   split_items f;
-  f.price_1 = atof(split_up_char(food[x], 2));
+  f.price_1 = atof(split_up_char(DataGet()[x], 2));
   return f.price_1;
 }
 
@@ -48,9 +45,6 @@ int main() {
 
   #endif
   std::cout << "Welcome " << user_request() << std::endl;
-
-  // Grabbing data from mysql
-  send_data();
 
   if(open_or_closed() == 1) {
     std::cout << "Open: " << "true" << std::endl;
@@ -71,15 +65,15 @@ int main() {
     if(menu_choice == "1") {
       cout << "Food & Drink Choices:" << std::endl;
 
-      for(int i = 0; i < 4; i++) {
-        std::cout << food[i] << std::endl;
+      for(int i = 0; i < DataGet().size(); i++) {
+        std::cout << DataGet()[i] << std::endl;
       }
       cout << std::endl;
     } else if(menu_choice == "2") {
       cout << std::endl << "food>> ";
       std::cin >> food_choice;
 
-      if((food_choice-1) < sizeof(food)/100) {
+      if((food_choice-1) < DataGet().size()) {
         std::cout << "Adding " << pick_food(food_choice-1) << " to your order." << endl;
         total += pick_price(food_choice-1);
         ordered += pick_food(food_choice-1);
@@ -93,8 +87,7 @@ int main() {
         cout << std::endl << "remove>> ";
         cin >> remove_choice;
 
-        if((remove_choice-1) < sizeof(food)/100) {
-          // 0000000100007148         cmp        esi, 0x0
+        if((remove_choice-1) < DataGet().size()) {
           if(ordered.find(pick_food(remove_choice-1)) != string::npos) {
             std::cout << "Removing " << pick_food(remove_choice-1) << " from your order." << endl;
             total -= pick_price(remove_choice-1);
