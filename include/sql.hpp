@@ -1,4 +1,4 @@
 #include <string>
+#include <vector>
 
-const std::string DataGet();
-void send_data(void);
+std::vector<std::string> DataGet();
