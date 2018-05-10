@@ -1,6 +1,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <vector>
 #include <iomanip>
 #include <mysql/mysql.h>
 #include <mysql/my_global.h>
@@ -45,8 +46,9 @@ void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PA
   }
 }
 
-const string DataGet() {
+vector<string> DataGet() {
   MYSQL *con = mysql_init(NULL);
+  vector<string> arr;
   string new_str;
 
   if (con == NULL) {
@@ -72,6 +74,7 @@ const string DataGet() {
 
   while((row = mysql_fetch_row(result))) {
       for(int i = 0; i < num_fields; i++) {
+          arr.push_back(row[i] ? row[i] : "NULL");
           new_str += row[i] ? row[i] : "NULL";
           new_str += " ";
       }
@@ -81,10 +84,5 @@ const string DataGet() {
   mysql_free_result(result);
   mysql_close(con);
 
-  return new_str;
-}
-
-void send_data(void) {
-  string get = DataGet();
-  std::cout << "Data: " << get << std::endl;
+  return arr;
 }
