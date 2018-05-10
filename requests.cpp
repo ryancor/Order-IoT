@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pwd.h>
 
 #ifdef __APPLE__
 #include <boost/filesystem.hpp>
@@ -121,6 +122,9 @@ char *user_request() {
   char *username = new char[LOGIN_NAME_MAX];
   int result;
 
+  register struct passwd *pw;
+  register uid_t uid;
+
   result = gethostname(hostname, HOST_NAME_MAX);
   if(result) {
     perror("gethostname");
@@ -129,8 +133,15 @@ char *user_request() {
 
   result = getlogin_r(username, LOGIN_NAME_MAX);
   if(result) {
-    perror("getlogin_r");
-    strcpy(username, "unknown");
+    uid = geteuid();
+    pw = getpwuid(uid);
+    
+    if(pw) {
+      strcpy(username, pw->pw_name);
+    } else {
+      perror("getlogin_r");
+      strcpy(username, "unknown");
+    }
   }
   return username;
 }
