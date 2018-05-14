@@ -5,8 +5,8 @@ ifeq ($(OS),Linux)
 else
 	CFLAGS=-lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
 endif
-DEPS = helper.hpp requests.hpp ip.hpp sql.hpp
-OBJ = main.o helper.o requests.o ip.o sql.o
+DEPS = src/helper.hpp src/requests.hpp src/ip.hpp src/sql.hpp
+OBJ = src/main.o src/helper.o src/requests.o src/ip.o src/sql.o
 
 %.o: %.c $(DEPS)
 	$(CC) `mysql_config --cflags` -c -o $@ $< $(CFLAGS)
