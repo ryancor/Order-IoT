@@ -21,8 +21,8 @@
 #include <SFML/Network.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/IpAddress.hpp>
-#include "include/ip.hpp"
-#include "include/helper.hpp"
+#include "../include/ip.hpp"
+#include "../include/helper.hpp"
 
 using namespace std;
 
@@ -135,7 +135,7 @@ char *user_request() {
   if(result) {
     uid = geteuid();
     pw = getpwuid(uid);
-    
+
     if(pw) {
       strcpy(username, pw->pw_name);
     } else {

@@ -9,7 +9,7 @@
 #include <string.h>
 #endif
 
-#include "include/ip.hpp"
+#include "../include/ip.hpp"
 
 std::string IPP::get_IP(void) {
   struct ifaddrs *ifAddrStruct = NULL;

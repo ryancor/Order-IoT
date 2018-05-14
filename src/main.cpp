@@ -7,9 +7,9 @@
 #include <stdlib.h>
 #endif
 
-#include "include/helper.hpp"
-#include "include/requests.hpp"
-#include "include/sql.hpp"
+#include "../include/helper.hpp"
+#include "../include/requests.hpp"
+#include "../include/sql.hpp"
 
 using namespace std;
 
@@ -37,7 +37,7 @@ int main() {
   float total = 0.00;
 
   #ifdef __unix__
-  #include "lib/pal.hpp"
+  #include "../lib/pal.hpp"
 
   if(isPalindrome(user_request()) == 1) {
     std::cout << "You have a very special name ;)" << std::endl;
