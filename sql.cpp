@@ -15,6 +15,16 @@ void finish_with_error(MYSQL *con) {
   exit(1);
 }
 
+void insert_data(MYSQL *con, int id, string query) {
+  ostringstream strstr;
+  strstr << "INSERT INTO Orders VALUES(" << id << ",'" << query << "')";
+  string str = strstr.str();
+
+  if (mysql_query(con, str.c_str())) {
+      finish_with_error(con);
+  }
+}
+
 void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PASSWORD, const char * DATABASE) {
   if (mysql_real_connect(con, HOST, USER, PASSWORD, DATABASE, 0, NULL, 0) == NULL)  {
       std::cout << "Please start your MySQL DB." << std::endl <<
@@ -29,21 +39,10 @@ void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PA
       finish_with_error(con);
   }
 
-  if (mysql_query(con, "INSERT INTO Orders VALUES(1,'1. Hamburger : $ 3.25')")) {
-      finish_with_error(con);
-  }
-
-  if (mysql_query(con, "INSERT INTO Orders VALUES(2,'2. Grilled-Cheese : $ 2.50')")) {
-      finish_with_error(con);
-  }
-
-  if (mysql_query(con, "INSERT INTO Orders VALUES(3,'3. Fries : $ 2.00')")) {
-      finish_with_error(con);
-  }
-
-  if (mysql_query(con, "INSERT INTO Orders VALUES(3,'4. Soda : $ 1.00')")) {
-      finish_with_error(con);
-  }
+  insert_data(con, 1, "1. Hamburger : $ 3.25");
+  insert_data(con, 2, "2. Grilled-Cheese : $ 2.50");
+  insert_data(con, 3, "3. Fries : $ 2.00");
+  insert_data(con, 4, "4. Soda : $ 1.00");
 }
 
 vector<string> DataGet() {
