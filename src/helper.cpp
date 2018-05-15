@@ -38,10 +38,11 @@ unsigned long customer_id() {
   /*
     generate secret number in asm between 1 and 0x80400000:
     num = rand() % 2151678196 + 1
+    mov %1, %0 -> add $num, %0
   */
   __asm__ __volatile__ (
-        "mov %1, %0\n\t"
-        "add $1, %0"
+        "mov %%edx, %%ecx\n\t"
+        "add $1, %%ecx"
         : "=r" (num)
         : "r" (rand() % 0x804061f4 + 0x1)
   );
