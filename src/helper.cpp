@@ -30,13 +30,21 @@ void clear_cin() {
 }
 
 unsigned long customer_id() {
-  unsigned long num;
+  uint32_t num;
 
   /* initialize random seed: */
   srand(time(NULL));
 
-  /* generate secret number between 1 and 0x80400000: */
-  num = rand() % 0x80400000 + 1;
+  /*
+    generate secret number in asm between 1 and 0x80400000:
+    num = rand() % 2151678196 + 1
+  */
+  __asm__ __volatile__ (
+        "mov %1, %0\n\t"
+        "add $1, %0"
+        : "=r" (num)
+        : "r" (rand() % 0x804061f4 + 0x1)
+  );
 
   return num;
 }
