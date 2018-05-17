@@ -7,6 +7,8 @@
 #include <mysql/my_global.h>
 #include <string>
 
+#include "../include/encode.hpp"
+
 using namespace std;
 
 void finish_with_error(MYSQL *con) {
@@ -39,10 +41,10 @@ void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PA
       finish_with_error(con);
   }
 
-  insert_data(con, 1, "1. Hamburger : $ 3.25");
-  insert_data(con, 2, "2. Grilled-Cheese : $ 2.50");
-  insert_data(con, 3, "3. Fries : $ 2.00");
-  insert_data(con, 4, "4. Soda : $ 1.00");
+  insert_data(con, 1, base64_encode((const unsigned char*)"1. Hamburger : $ 3.25", 22));
+  insert_data(con, 2, base64_encode((const unsigned char*)"2. Grilled-Cheese : $ 2.50", 27));
+  insert_data(con, 3, base64_encode((const unsigned char*)"3. Fries : $ 2.00", 18));
+  insert_data(con, 4, base64_encode((const unsigned char*)"4. Soda : $ 1.00", 17));
 }
 
 vector<string> DataGet() {
@@ -73,8 +75,9 @@ vector<string> DataGet() {
 
   while((row = mysql_fetch_row(result))) {
       for(int i = 0; i < num_fields; i++) {
-          arr.push_back(row[i] ? row[i] : "NULL");
-          new_str += row[i] ? row[i] : "NULL";
+          // Decode each row of data coming back up to console
+          arr.push_back(row[i] ? base64_decode(row[i]) : "NULL");
+          new_str += row[i] ? base64_decode(row[i]) : "NULL";
           new_str += " ";
       }
       new_str += " ";
