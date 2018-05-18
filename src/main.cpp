@@ -13,6 +13,8 @@
 
 using namespace std;
 
+extern "C" void show();
+
 typedef struct {
   string food_1;
   int price_1;
@@ -44,7 +46,9 @@ int main() {
   }
 
   #endif
-  std::cout << "Welcome " << user_request() << std::endl;
+
+  show();
+  std::cout << user_request() << std::endl;
 
   if(open_or_closed() == 1) {
     std::cout << "Open: " << "true" << std::endl;
