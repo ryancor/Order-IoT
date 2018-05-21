@@ -8,23 +8,23 @@ _verify:
   push	%rbp
   mov	  %rsp, %rbp
   sub	  $16, %rsp
-	lea	  _file(%rip), %rdi
-	xor	  %esi, %esi
-	movl	$0, -4(%rbp)
-	movb	$0, %al
-	call	_open
-	mov	  %eax, -8(%rbp)
-	cmpl	$0, -8(%rbp)  // rax == 0x3 if equal, 0xffffffffffffffff	-1 if not
-	jge	  CALIT         // jump if rax > rdx
+  lea	  _file(%rip), %rdi
+  xor	  %esi, %esi
+  movl	$0, -4(%rbp)
+  movb	$0, %al
+  call	_open
+  mov	  %eax, -8(%rbp)
+  cmpl	$0, -8(%rbp)  // rax == 0x3 if equal, 0xffffffffffffffff	-1 if not
+  jge	  CALIT         // jump if rax > rdx
 
   // Create file
   mov   $85, %rax     // sys_create
   syscall
 
   // File created sucessfully?
-	mov	  $0, %rdx
-	cmp	  %rdx, %rax
-	jmp	  EX
+  mov	  $0, %rdx
+  cmp	  %rdx, %rax
+  jmp	  EX
 
 CALIT:
   lea   _string(%rip), %rdi
@@ -32,15 +32,15 @@ CALIT:
   call  _printf
   mov	  %eax, -16(%rbp)
   mov	  -4(%rbp), %eax
-	add	  $16, %rsp
-	pop	  %rbp
-	ret
+  add	  $16, %rsp
+  pop	  %rbp
+  ret
 
 EX:
-	// sys_exit(return_code)
-	mov	  $60, %rax        	// sys_exit
-	mov	  $1, %rdi        	// exit 1 (fail)
-	call  _exit
+  // sys_exit(return_code)
+  mov	  $60, %rax        	// sys_exit
+  mov	  $1, %rdi        	// exit 1 (fail)
+  call  _exit
 
 
 .data
