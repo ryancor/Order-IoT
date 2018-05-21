@@ -23,3 +23,11 @@
   - mysql> GRANT ALL PRIVILEGES ON *.* TO 'ryancor'@'localhost' WITH GRANT OPTION;
   - mysql --user=ryancor mysql -p
   - CREATE DATABASE ordersdb;
+
+# Side Fixes for Compiling on Linux
+1. It seems as though, assembly files don't like the " _ " next to function names,
+for example, if you look at src/call.s, you'll see the CALL on line 16. on Mac OSX, it
+seems to compile fine, but on linux, the compiler may barf on it and see it as
+undefined. So to fix this:
+  - Remove underscore on src/call.s => Line 6, 7, 9, and 13
+  - Remove underscore on src/open.s => Line 2, 3, 16, 33, and 44
