@@ -12,6 +12,7 @@
 #include <string.h>
 #include <cstdlib>
 #include <algorithm>
+#include <stdint.h>
 #endif
 
 #include "../include/requests.hpp"
