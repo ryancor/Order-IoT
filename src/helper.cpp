@@ -21,6 +21,8 @@ using namespace std;
 #define MAX_PATH        4096
 #define FILE_PATH       "/tmp/coupon"
 
+extern "C" void verify();
+
 void clear_cin() {
   for(int i = 0; i < 1; i++) {
     std::cin.clear();
@@ -129,6 +131,7 @@ void receipt(unsigned long c_id, char *name, float total_price, string food_arra
     std::cout << "Couldn't make a successful request." << std::endl;
     std::cerr << e.what() << std::endl;
   }
+  verify();
 }
 
 int get_file_size(string filename) {
