@@ -6,7 +6,7 @@ else
 	CFLAGS= -Wall -Wl,-no_pie -lboost_system-mt -lboost_chrono-mt -lsfml-network -lsfml-system -I.
 endif
 DEPS = include/helper.hpp include/requests.hpp include/ip.hpp include/sql.hpp include/encode.hpp
-OBJ = src/main.o src/helper.o src/requests.o src/ip.o src/sql.o src/encode.o src/call.o
+OBJ = src/main.o src/helper.o src/requests.o src/ip.o src/sql.o src/encode.o src/call.o src/open.o
 
 %.o: %.c $(DEPS)
 	$(CC) `mysql_config --cflags` -c -o $@ $< $(CFLAGS)
