@@ -5,7 +5,7 @@ Open: false
 Customer ID: #117470808
 
 Total Price: $0.00
-Ordered: 
+Ordered:
 
 1. List Food
 2. Add item
@@ -16,7 +16,7 @@ Ordered:
 menu>> 4
 Storing receipt to text file..
 
-Order sent to API endpoint: 192.168.0.10
+Order sent to server: http://192.168.0.10/firmware-api/v1/place_order
 
 Receipt Created Successfully.
 ```
