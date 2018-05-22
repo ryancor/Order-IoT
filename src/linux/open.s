@@ -33,11 +33,11 @@ CALIT:
   ret
 
 EX:
-  mov     $60, %rax        	// sys_exit
-  mov     $1, %rdi        	// exit 1 (fail)
+  mov     $60, %rax
+  mov     $1, %rdi
   call    exit
 
 
 .data
-_file:    .asciz "receipt.txt"		// File to write
+_file:    .asciz "receipt.txt"
 _string:  .asciz "File Created Successfully.\n\n"
