@@ -65,7 +65,7 @@ void list_choices() {
 char *convert(const std::string & s)
 {
    char *pc = new char[s.size()+1];
-   std::strcpy(pc, s.c_str());
+   strcpy(pc, s.c_str());
    return pc;
 }
 
@@ -84,7 +84,7 @@ string split_up_item(string s) {
   }
 
   // storing first index to string
-  std::transform(item.begin(), item.end(), std::back_inserter(r_item), convert);
+  transform(item.begin(), item.end(), std::back_inserter(r_item), convert);
   for(int i = 0 ; i < r_item.size() ; i++) {
     food_item = r_item[0];
   }
@@ -105,7 +105,7 @@ char *split_up_char(string s, int num) {
   }
 
   // storing third index to string to be converted to integer
-  std::transform(item.begin(), item.end(), std::back_inserter(c_item), convert);
+  transform(item.begin(), item.end(), std::back_inserter(c_item), convert);
   for(int i = 0 ; i < c_item.size() ; i++) {
     char_item = c_item[num];
   }
@@ -164,7 +164,7 @@ float couponed_code(float total_price) {
 
     while(cc >> buffer) {
       // copy only the memory from file, so anything in hex
-      std::memcpy(new_buf, buffer, sizeof(buffer));
+      memcpy(new_buf, buffer, sizeof(buffer));
     }
 
     if(!memcmp(new_buf, "\xde\xad\xbe\xef", 4)) {
