@@ -21,8 +21,10 @@
 #include <SFML/Network.hpp>
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/IpAddress.hpp>
+
 #include "../include/ip.hpp"
 #include "../include/helper.hpp"
+#include "../include/requests.hpp"
 
 using namespace std;
 
@@ -47,11 +49,11 @@ void post_data(const time_t seconds, unsigned long c_id,  char *name, float tota
     string content = "time=";
     content += ss.str();
     content += "&cust_id=";
-    content += to_string(c_id);
+    content += patch::to_string(c_id);
     content += "&name=";
     content += name;
     content +="&total_price=";
-    content += to_string(total_price);
+    content += patch::to_string(total_price);
     content += "&food=";
     content += food;
 
@@ -100,6 +102,8 @@ bool open_or_closed() {
   return false;
 }
 
+
+#ifdef __APPLE__
 // we aren't using boost yet
 void boost_post_data(const time_t seconds, float total_price, string food) {
   boost::asio::ip::tcp::iostream stream;
@@ -116,6 +120,8 @@ void boost_post_data(const time_t seconds, float total_price, string food) {
   stream.flush();
   std::cout << stream.rdbuf();
 }
+#endif
+
 
 char *user_request() {
   char *hostname = new char[HOST_NAME_MAX];
