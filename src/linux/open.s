@@ -1,10 +1,8 @@
 .text
-.global _verify
-#.type _verify, @function
+.global verify
+.type verify, @function
 
-// Create if(open()) gcc -S open.c
-
-_verify:
+verify:
   push    %rbp
   mov     %rsp, %rbp
   sub     $16, %rsp
@@ -12,16 +10,14 @@ _verify:
   xor     %esi, %esi
   movl    $0, -4(%rbp)
   movb    $0, %al
-  call    _open
+  call    open
   mov     %eax, -8(%rbp)
-  cmpl    $0, -8(%rbp)  // rax == 0x3 if equal, 0xffffffffffffffff	-1 if not
-  jge     CALIT         // jump if rax > rdx
+  cmpl    $0, -8(%rbp)
+  jge     CALIT
 
-  // Create file
-  mov     $85, %rax     // sys_create
+  mov     $85, %rax
   syscall
 
-  // File created sucessfully?
   mov     $0, %rdx
   cmp     %rdx, %rax
   jmp     EX
@@ -29,7 +25,7 @@ _verify:
 CALIT:
   lea     _string(%rip), %rdi
   movb    $0, %al
-  call    _printf
+  call    printf
   mov     %eax, -16(%rbp)
   mov     -4(%rbp), %eax
   add     $16, %rsp
@@ -37,10 +33,9 @@ CALIT:
   ret
 
 EX:
-  // sys_exit(return_code)
   mov     $60, %rax        	// sys_exit
   mov     $1, %rdi        	// exit 1 (fail)
-  call    _exit
+  call    exit
 
 
 .data

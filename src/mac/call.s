@@ -4,7 +4,6 @@
 # Actual Code
 .text
 .global _show
-#.type _show, @function
 
 _show:
   sub  $8, %rsp           // align rsp to 16B boundary
