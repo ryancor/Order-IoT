@@ -1,4 +1,27 @@
-# cpp-algorithms
+# Order-IoT
+```
+Welcome ryancor
+Open: false
+Customer ID: #117470808
+
+Total Price: $0.00
+Ordered: 
+
+1. List Food
+2. Add item
+3. Delete item
+4. Place Order
+5. Exit
+
+menu>> 4
+Storing receipt to text file..
+
+Order sent to API endpoint: 192.168.0.10
+
+Receipt Created Successfully.
+```
+
+# Install Dependencies
 1. brew install boost
   - OR sudo apt-get install libboost-dev-all
 2. brew install sfml
