@@ -26,7 +26,7 @@ string pick_food(int x) {
   return f.food_1;
 }
 
-int pick_price(int x) {
+double pick_price(int x) {
   split_items f;
   f.price_1 = atof(split_up_char(DataGet()[x], 2));
   return f.price_1;
