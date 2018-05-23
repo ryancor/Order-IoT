@@ -5,6 +5,7 @@
 
 #ifdef __unix__
 #include <stdlib.h>
+#include <stdio.h>
 #endif
 
 #include "../include/helper.hpp"
@@ -43,6 +44,7 @@ int main() {
 
   if(isPalindrome(user_request()) == 1) {
     std::cout << "You have a very special name ;)" << std::endl;
+    printf("You earned a debug address: 0x%08x\n\n", readKey());
   }
 
   #endif
