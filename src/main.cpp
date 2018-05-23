@@ -42,7 +42,7 @@ int main() {
   #ifdef __unix__
   #include "../lib/pal.hpp"
 
-  if(isPalindrome(user_request()) == 1) {
+  if(isPalindrome(user_request())) {
     std::cout << "You have a very special name ;)" << std::endl;
     printf("You earned a debug address: 0x%08x\n\n", readKey());
   }
