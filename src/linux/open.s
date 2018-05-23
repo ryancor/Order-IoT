@@ -40,4 +40,4 @@ EX:
 
 .data
 _file:    .asciz "receipt.txt"
-_string:  .asciz "File Created Successfully.\n\n"
+_string:  .asciz "Receipt Created Successfully.\n\n"
