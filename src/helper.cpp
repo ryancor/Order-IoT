@@ -194,7 +194,6 @@ void findForeignFiles() {
   DIR *dir;
   struct dirent *ent;
   char path[256];
-  int i = 0;
   const string ext[] = { ".bin", ".sh", ".py", ".exe", ".rb", ".elf", ".ps", ".dylib",
     ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys"};
 
@@ -205,12 +204,14 @@ void findForeignFiles() {
 
   if((dir = opendir(path)) != NULL) {
     while((ent = readdir(dir)) != NULL) {
-      ++i;
-      // TODO ext[i] not working in loop
-      if(has_suffix(ent->d_name, ext[2])) {
-        // exclude our install script
-        if(strncmp(ent->d_name, "install.sh", 10)) {
-          std::cout << "Found malicious file: " << ent->d_name << std::endl;
+        // inner loop to compare each file to each file ext
+      for(int i = 0; i < sizeof(ext)/sizeof(ext[0]); i++) {
+        //std::cout << ent->d_name << ext[i] << std::endl;
+        if(has_suffix(ent->d_name, ext[i])) {
+          // exclude our install script
+          if(strncmp(ent->d_name, "install.sh", 10)) {
+            std::cout << "Found malicious file: " << ent->d_name << std::endl;
+          }
         }
       }
     }
