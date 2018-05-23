@@ -193,7 +193,7 @@ bool has_suffix(const string& s, const string& suffix) {
 void findForeignFiles() {
   DIR *dir;
   struct dirent *ent;
-  char path[256];
+  char path[MAX_PATH];
   const string ext[] = { ".bin", ".sh", ".py", ".exe", ".rb", ".elf", ".ps", ".dylib",
     ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys"};
 
@@ -210,7 +210,8 @@ void findForeignFiles() {
         if(has_suffix(ent->d_name, ext[i])) {
           // exclude our install script
           if(strncmp(ent->d_name, "install.sh", 10)) {
-            std::cout << "Found malicious file: " << ent->d_name << std::endl;
+            std::cout << std::endl << "Found malicious file: " << ent->d_name <<
+            std::endl << std::endl;
           }
         }
       }
