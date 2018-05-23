@@ -206,7 +206,7 @@ void findForeignFiles() {
     while((ent = readdir(dir)) != NULL) {
         // inner loop to compare each file to each file ext
       for(int i = 0; i < sizeof(ext)/sizeof(ext[0]); i++) {
-        //std::cout << ent->d_name << ext[i] << std::endl;
+        // file.py -comp-> .sh
         if(has_suffix(ent->d_name, ext[i])) {
           // exclude our install script
           if(strncmp(ent->d_name, "install.sh", 10)) {
