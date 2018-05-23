@@ -61,6 +61,8 @@ int main() {
   std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
 
   while(1) {
+    findForeignFiles();
+    
     std::cout << "Total Price: $" << std::fixed <<
     std::setprecision(2) << total << endl;
     std::cout << "Ordered: " << ordered << endl << endl;
