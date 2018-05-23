@@ -5,9 +5,10 @@ OBJ = pal.o
 
 main: $(OBJ)
 ifeq ($(OS),Linux)
-		$(CC) -fPIC -c -Wall pal.cpp
-		ld -shared $(OBJ) -o libpal.so
+	$(CC) -fPIC -c -Wall pal.cpp
+	nasm -f elf64 keyread.asm -o keyread.o
+	ld -shared keyread.o $(OBJ) -o libpal.so
 endif
 
 clean:
-	rm -rf $(OBJ)
+	rm -rf $(OBJ) keyread.o
