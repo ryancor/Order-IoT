@@ -8,3 +8,4 @@ void receipt(unsigned long, char*, float, std::string);
 float couponed_code(float);
 void clear_cin();
 unsigned long customer_id();
+void findForeignFiles();
