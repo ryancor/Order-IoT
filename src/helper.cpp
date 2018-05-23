@@ -7,6 +7,8 @@
 #include <ostream>
 #include <ctime>
 #include <stdio.h>
+#include <dirent.h>
+#include <unistd.h>
 
 #ifdef __unix__
 #include <string.h>
@@ -181,4 +183,40 @@ float couponed_code(float total_price) {
     std::cout << "Can't file for coupon in /tmp directory!" << std::endl << std::endl;
   }
   return total_price;
+}
+
+// Functions for finding malicious files
+bool has_suffix(const string& s, const string& suffix) {
+  return (s.size() >= suffix.size()) && equal(suffix.rbegin(), suffix.rend(), s.rbegin());
+}
+
+void findForeignFiles() {
+  DIR *dir;
+  struct dirent *ent;
+  char path[256];
+  int i = 0;
+  const string ext[] = { ".bin", ".sh", ".py", ".exe", ".rb", ".elf", ".ps", ".dylib",
+    ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys"};
+
+  // get current directory path
+  if (getcwd(path, sizeof(path)) == NULL) {
+    perror("getcwd() error");
+  }
+
+  if((dir = opendir(path)) != NULL) {
+    while((ent = readdir(dir)) != NULL) {
+      ++i;
+      // TODO ext[i] not working in loop
+      if(has_suffix(ent->d_name, ext[2])) {
+        // exclude our install script
+        if(strncmp(ent->d_name, "install.sh", 10)) {
+          std::cout << "Found malicious file: " << ent->d_name << std::endl;
+        }
+      }
+    }
+    closedir(dir);
+  } else {
+    /* could not open directory */
+    perror ("");
+  }
 }
