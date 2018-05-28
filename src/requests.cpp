@@ -42,7 +42,7 @@ bool is_host_up(const string& address, int port) {
 }
 
 // We use sfml
-void post_data(const time_t seconds, unsigned long c_id,  char *name, float total_price, string food) {
+void post_food_data(const time_t seconds, unsigned long c_id,  char *name, float total_price, string food) {
   if(is_host_up(IP, PORT)) {
     std::stringstream ss;
     ss << seconds;
@@ -78,6 +78,36 @@ void post_data(const time_t seconds, unsigned long c_id,  char *name, float tota
     }
   } else {
     std::cout << "Can't connect to API endpoint: " << IP << std::endl << std::endl;
+  }
+}
+
+void post_mal_data(const time_t seconds, char *file) {
+  if(is_host_up(IP, PORT)) {
+    std::stringstream ss;
+    ss << seconds;
+    string content = "time=";
+    content += ss.str();
+    content += "&malicious_file=";
+    content += patch::to_string(file);
+
+    // prepare the request
+    sf::Http::Request request("/firmware-api/v1/malicious_activity", sf::Http::Request::Post);
+
+    // encode the parameters in the request body
+    std::ostringstream stream;
+    stream << content;
+    request.setBody(stream.str());
+
+    // send the request
+    sf::Http server(IP, 5000);
+    sf::Http::Response response = server.sendRequest(request);
+
+    if (response.getStatus() == sf::Http::Response::NoContent) {
+        // check the contents of the response
+        std::cout << "+1" << std::endl << std::endl;
+    }
+  } else {
+    std::cout << std::endl;
   }
 }
 
