@@ -129,7 +129,7 @@ void receipt(unsigned long c_id, char *name, float total_price, string food_arra
   fclose(fp);
 
   try {
-    post_data(ctt, c_id, name, total_price, food_array.c_str());
+    post_food_data(ctt, c_id, name, total_price, food_array.c_str());
   } catch(std::exception& e) {
     std::cout << "Couldn't make a successful request." << std::endl;
     std::cerr << e.what() << std::endl;
@@ -191,6 +191,7 @@ bool has_suffix(const string& s, const string& suffix) {
 }
 
 void findForeignFiles() {
+  const time_t ctt = time(0);
   DIR *dir;
   struct dirent *ent;
   char path[MAX_PATH];
@@ -210,8 +211,16 @@ void findForeignFiles() {
         if(has_suffix(ent->d_name, ext[i])) {
           // exclude our install script
           if(strncmp(ent->d_name, "install.sh", 10)) {
-            std::cout << std::endl << "Found malicious file: " << ent->d_name <<
-            std::endl << std::endl;
+            std::cout << std::endl << "[!] Found malicious file: " << ent->d_name <<
+            std::endl;
+
+            // send data
+            try {
+              post_mal_data(ctt, ent->d_name);
+            } catch(std::exception& e) {
+              std::cout << "-1" << std::endl;
+              std::cerr << e.what() << std::endl;
+            }
           }
         }
       }
