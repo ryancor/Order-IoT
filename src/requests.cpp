@@ -22,13 +22,20 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/IpAddress.hpp>
 
-#include <wx/clipbrd.h>
-
 #include "../include/ip.hpp"
 #include "../include/helper.hpp"
 #include "../include/requests.hpp"
+#include "../include/clipIt.hpp"
 
 using namespace std;
+
+#ifdef __APPLE__
+  // Copy content over to clip func
+  #define useWxWidget copyRecToClip(content);
+#else
+  // (TODO) copyRec does not work yet with Ubuntu
+  #define useWxWidget OnChar(0x02);
+#endif
 
 IPP ip1;
 #define IP               "192.168.0.9"
@@ -41,27 +48,6 @@ bool is_host_up(const string& address, int port) {
   bool open = (socket.connect(sf::IpAddress(address), port) == sf::Socket::Done);
   socket.disconnect();
   return open;
-}
-
-void copyRecToClip(string clip) {
-  // get text to copy to clip
-  if(wxTheClipboard->Open()) {
-    wxTheClipboard->SetData(new wxTextDataObject(clip));
-    wxTheClipboard->Close();
-  }
-
-  // read it
-  if(wxTheClipboard->Open()) {
-    if(wxTheClipboard->IsSupported(wxDF_TEXT)) {
-      wxTextDataObject data;
-      wxTheClipboard->GetData(data);
-
-      const char *new_text = data.GetText();
-      //wxInfoMessageBox((wxWindow*)new_text);
-      std::cout << "Copied to Clipboard." << std::endl;
-    }
-    wxTheClipboard->Close();
-  }
 }
 
 // We use sfml
@@ -102,8 +88,7 @@ void post_food_data(const time_t seconds, unsigned long c_id,  char *name, float
   } else {
     std::cout << "Can't connect to API endpoint: " << IP << std::endl << std::endl;
   }
-  // Copy content over to clip func
-  copyRecToClip(content);
+  useWxWidget;
 }
 
 void post_mal_data(const time_t seconds, char *file) {
