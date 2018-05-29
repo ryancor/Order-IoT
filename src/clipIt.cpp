@@ -43,6 +43,8 @@ void OnChar(wxKeyEvent& event) {
           break;
       case WXK_F1:
           break;
+      default:
+          std::cout << uc;
     }
   }
 }
