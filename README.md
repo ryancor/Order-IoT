@@ -28,7 +28,7 @@ Receipt Created Successfully.
 2. brew install sfml
   - OR sudo apt-get install sfml-dev
 3. brew install wx-Widgets
-  - OR sudo apt-get install wx3.0-headers libwxgtk3.0-dev
+  - OR sudo apt-get install wx3.0-headers libwxgtk3.0-dev libqt4-dev
 4. MYSQL
   - Mac
     - brew install mysql
