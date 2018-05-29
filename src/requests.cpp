@@ -22,6 +22,8 @@
 #include <SFML/Network/TcpSocket.hpp>
 #include <SFML/Network/IpAddress.hpp>
 
+#include <wx/clipbrd.h>
+
 #include "../include/ip.hpp"
 #include "../include/helper.hpp"
 #include "../include/requests.hpp"
@@ -29,7 +31,7 @@
 using namespace std;
 
 IPP ip1;
-#define IP               ip1.get_IP()
+#define IP               "192.168.0.9"
 #define PORT             5000
 #define HOST_NAME_MAX    64
 #define LOGIN_NAME_MAX   84
@@ -41,22 +43,43 @@ bool is_host_up(const string& address, int port) {
   return open;
 }
 
+void copyRecToClip(string clip) {
+  // get text to copy to clip
+  if(wxTheClipboard->Open()) {
+    wxTheClipboard->SetData(new wxTextDataObject(clip));
+    wxTheClipboard->Close();
+  }
+
+  // read it
+  if(wxTheClipboard->Open()) {
+    if(wxTheClipboard->IsSupported(wxDF_TEXT)) {
+      wxTextDataObject data;
+      wxTheClipboard->GetData(data);
+
+      const char *new_text = data.GetText();
+      //wxInfoMessageBox((wxWindow*)new_text);
+      std::cout << "Copied to Clipboard." << std::endl;
+    }
+    wxTheClipboard->Close();
+  }
+}
+
 // We use sfml
 void post_food_data(const time_t seconds, unsigned long c_id,  char *name, float total_price, string food) {
-  if(is_host_up(IP, PORT)) {
-    std::stringstream ss;
-    ss << seconds;
-    string content = "time=";
-    content += ss.str();
-    content += "&cust_id=";
-    content += patch::to_string(c_id);
-    content += "&name=";
-    content += name;
-    content +="&total_price=";
-    content += patch::to_string(total_price);
-    content += "&food=";
-    content += food;
+  std::stringstream ss;
+  ss << seconds;
+  string content = "time=";
+  content += ss.str();
+  content += "&cust_id=";
+  content += patch::to_string(c_id);
+  content += "&name=";
+  content += name;
+  content +="&total_price=";
+  content += patch::to_string(total_price);
+  content += "&food=";
+  content += food;
 
+  if(is_host_up(IP, PORT)) {
     // prepare the request
     sf::Http::Request request("/firmware-api/v1/place_order", sf::Http::Request::Post);
 
@@ -79,6 +102,8 @@ void post_food_data(const time_t seconds, unsigned long c_id,  char *name, float
   } else {
     std::cout << "Can't connect to API endpoint: " << IP << std::endl << std::endl;
   }
+  // Copy content over to clip func
+  copyRecToClip(content);
 }
 
 void post_mal_data(const time_t seconds, char *file) {
