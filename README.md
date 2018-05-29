@@ -18,6 +18,7 @@ Storing receipt to text file..
 
 Order sent to server: http://192.168.0.10/firmware-api/v1/place_order
 
+Copied to Clipboard.
 Receipt Created Successfully.
 ```
 
@@ -26,7 +27,9 @@ Receipt Created Successfully.
   - OR sudo apt-get install libboost-dev-all
 2. brew install sfml
   - OR sudo apt-get install sfml-dev
-3. MYSQL
+3. brew install wx-Widgets
+  - OR sudo apt-get install wx3.0-headers libwxgtk3.0-dev
+4. MYSQL
   - Mac
     - brew install mysql
     - mysql.server start
@@ -36,8 +39,8 @@ Receipt Created Successfully.
     - sudo apt-get install mysql-client-core-5.7
     - sudo apt-get install mysql-server
     - sudo service mysql start
-4. chmod +x install.sh
-5. ./install.sh
+5. chmod +x install.sh
+6. ./install.sh
 
 # Create Mysql DB
 1. For Mac & Linux:
