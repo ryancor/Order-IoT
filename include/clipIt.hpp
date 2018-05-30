@@ -7,5 +7,7 @@
 #endif
 
 #ifdef __unix__
-  void QtOnChar(std::string);
+  #include <QApplication>
+
+  void QtOnChar(QString);
 #endif
