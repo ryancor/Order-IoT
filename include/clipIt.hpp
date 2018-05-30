@@ -1,5 +1,11 @@
 #include <string>
-#include <wx/event.h>
 
-void copyRecToClip(std::string);
-void OnChar(wxKeyEvent&);
+#ifdef __APPLE__
+  #include <wx/event.h>
+
+  void copyRecToClip(std::string);
+#endif
+
+#ifdef __unix__
+  void QtOnChar(std::string);
+#endif
