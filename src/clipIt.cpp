@@ -1,11 +1,21 @@
 #include <iostream>
 #include <string>
+
+#ifdef __APPLE__
 #include <wx/clipbrd.h>
 #include <wx/event.h>
 #include <wx/log.h>
+#endif
+
+#ifdef __unix__
+#include <QClipboard>
+#include <QApplication>
+#endif
 
 using namespace std;
 
+
+#ifdef __APPLE__
 void copyRecToClip(string clip) {
   // get text to copy to clip
   if(wxTheClipboard->Open()) {
@@ -26,25 +36,26 @@ void copyRecToClip(string clip) {
     wxTheClipboard->Close();
   }
 }
+#endif
 
-void OnChar(wxKeyEvent& event) {
-  wxChar uc = event.GetUnicodeKey();
-  if(uc != WXK_NONE) {
-    if(uc >= 32) {
-      wxLogMessage("You pressed '%c'\n", uc);
-    } else {
-      wxLogMessage("Nothing was pressed\n");
-    }
-  } else {// No Unicode equivalent.
-    // It's a special key, deal with all the known ones:
-    switch ( event.GetKeyCode() ) {
-      case WXK_LEFT:
-      case WXK_RIGHT:
-          break;
-      case WXK_F1:
-          break;
-      default:
-          std::cout << uc;
-    }
+
+#ifdef __unix__
+void QtOnChar(QString clip) {
+  #ifdef Q_WS_X11
+    bool useGUI = getenv("DISPLAY") != 0;
+  #else
+    bool useGUI = true;
+  #endif
+
+  int argc;
+  char **argv;
+  QApplication app(argc, argv, useGUI);
+
+  if(useGUI) {
+    QString selected_text;
+    QString text = clip;
+    selected_text.append(text);
+    QApplication::clipboard()->setText(selected_text);
   }
 }
+#endif
