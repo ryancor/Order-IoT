@@ -34,7 +34,7 @@ using namespace std;
   #define useWxWidget copyRecToClip(content);
 #else
   // (TODO) copyRec does not work yet with Ubuntu
-  #define useWxWidget OnChar((wxKeyEvent&)content);
+  #define useWxWidget QtOnChar(content);
 #endif
 
 IPP ip1;
