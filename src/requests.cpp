@@ -16,6 +16,7 @@
 #ifdef __unix__
 #include <sstream>
 #include <string.h>
+#include <QApplication>
 #endif
 
 #include <SFML/Network.hpp>
@@ -33,8 +34,8 @@ using namespace std;
   // Copy content over to clip func
   #define useWxWidget copyRecToClip(content);
 #else
-  // (TODO) copyRec does not work yet with Ubuntu
-  #define useWxWidget QtOnChar(content);
+  // converting string to QString so it can be put to QClipboard
+  #define useWxWidget QtOnChar(QString::fromStdString(content));
 #endif
 
 IPP ip1;
