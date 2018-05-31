@@ -39,7 +39,7 @@ using namespace std;
 #endif
 
 IPP ip1;
-#define IP               "192.168.0.9"
+#define IP               ip1.get_IP()
 #define PORT             5000
 #define HOST_NAME_MAX    64
 #define LOGIN_NAME_MAX   84
