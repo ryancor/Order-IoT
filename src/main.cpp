@@ -11,15 +11,9 @@
 #include "../include/helper.hpp"
 #include "../include/requests.hpp"
 #include "../include/sql.hpp"
+#include "../include/main.hpp"
 
 using namespace std;
-
-extern "C" void show();
-
-typedef struct {
-  string food_1;
-  int price_1;
-} split_items;
 
 string pick_food(int x) {
   split_items f;
