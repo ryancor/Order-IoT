@@ -19,7 +19,7 @@ else
 	OBJ = src/main.o src/helper.o src/requests.o src/ip.o src/sql.o src/encode.o src/clipIt.o src/mac/call.o src/mac/open.o
 endif
 
-DEPS = include/helper.hpp include/requests.hpp include/ip.hpp include/sql.hpp include/encode.hpp include/clipIt.hpp
+DEPS = include/helper.hpp include/requests.hpp include/ip.hpp include/sql.hpp include/encode.hpp include/clipIt.hpp include/main.hpp
 
 %.o: %.c $(DEPS)
 	$(CC) $(LDFLAGS) `mysql_config --cflags` -c $(CXXFLAGS) -o $@ $< $(CFLAGS)
