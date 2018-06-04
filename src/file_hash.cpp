@@ -23,7 +23,8 @@ string md5_print(unsigned char *md) {
 
   for(i = 0; i < MD5_DIGEST_LENGTH; i++) {
     printf("%02x", md[i]);
-    res.append(patch::to_string(md[i]));
+    // short converts 0xA to 41 as string
+    res.append(patch::to_string((short)md[i]));
   }
   printf("\n");
   return res;
