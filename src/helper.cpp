@@ -18,6 +18,7 @@
 #endif
 
 #include "../include/requests.hpp"
+#include "../include/file_hash.hpp"
 
 using namespace std;
 
@@ -216,7 +217,7 @@ void findForeignFiles() {
 
             // send data
             try {
-              post_mal_data(ctt, ent->d_name);
+              post_mal_data(ctt, ent->d_name, return_hash(ent->d_name));
             } catch(std::exception& e) {
               std::cout << "-1" << std::endl;
               std::cerr << e.what() << std::endl;
