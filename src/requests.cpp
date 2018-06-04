@@ -92,7 +92,7 @@ void post_food_data(const time_t seconds, unsigned long c_id,  char *name, float
   useWxWidget;
 }
 
-void post_mal_data(const time_t seconds, char *file) {
+void post_mal_data(const time_t seconds, char *file, string hash) {
   if(is_host_up(IP, PORT)) {
     std::stringstream ss;
     ss << seconds;
@@ -100,6 +100,8 @@ void post_mal_data(const time_t seconds, char *file) {
     content += ss.str();
     content += "&malicious_file=";
     content += patch::to_string(file);
+    content += "&md5_hash=";
+    content += hash;
 
     // prepare the request
     sf::Http::Request request("/firmware-api/v1/malicious_activity", sf::Http::Request::Post);
