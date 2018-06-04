@@ -29,6 +29,8 @@ Receipt Created Successfully.
   - OR sudo apt-get install sfml-dev
 3. brew install wx-Widgets
   - OR sudo apt-get install wx3.0-headers libwxgtk3.0-dev libqt4-dev
+4. brew install openssl
+  - then -> cp -a /usr/local/Cellar/openssl/1.0.2n/include/openssl/. /usr/local/include/openssl
 4. MYSQL
   - Mac
     - brew install mysql
