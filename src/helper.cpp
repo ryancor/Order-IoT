@@ -217,7 +217,7 @@ void findForeignFiles() {
 
             // send data
             try {
-              post_mal_data(ctt, ent->d_name, return_hash(ent->d_name));
+              post_mal_data(ctt, ent->d_name, return_md5_hash(ent->d_name), return_sha_hash(ent->d_name));
             } catch(std::exception& e) {
               std::cout << "-1" << std::endl;
               std::cerr << e.what() << std::endl;
