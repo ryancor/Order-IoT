@@ -31,7 +31,7 @@ Receipt Created Successfully.
   - OR sudo apt-get install wx3.0-headers libwxgtk3.0-dev libqt4-dev
 4. brew install openssl
   - then -> cp -a /usr/local/Cellar/openssl/1.0.2n/include/openssl/. /usr/local/include/openssl
-4. MYSQL
+5. MYSQL
   - Mac
     - brew install mysql
     - mysql.server start
@@ -41,8 +41,8 @@ Receipt Created Successfully.
     - sudo apt-get install mysql-client-core-5.7
     - sudo apt-get install mysql-server
     - sudo service mysql start
-5. chmod +x install.sh
-6. ./install.sh
+6. chmod +x install.sh
+7. ./install.sh
 
 # Create Mysql DB
 1. For Mac & Linux:
