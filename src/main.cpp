@@ -15,6 +15,8 @@
 
 using namespace std;
 
+static void exit_ITR(void) __attribute__ ((destructor));
+
 string pick_food(int x) {
   split_items f;
   f.food_1 = split_up_item(DataGet()[x]) + ", ";
@@ -56,7 +58,7 @@ int main() {
 
   while(1) {
     findForeignFiles();
-    
+
     std::cout << "Total Price: $" << std::fixed <<
     std::setprecision(2) << total << endl;
     std::cout << "Ordered: " << ordered << endl << endl;
@@ -120,4 +122,8 @@ int main() {
     }
   }
   return 0;
+}
+
+void exit_ITR(void) {
+  std::cout << "Thanks for exiting properly && interruptly!" << std::endl;
 }
