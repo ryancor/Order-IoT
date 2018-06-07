@@ -59,3 +59,8 @@ seems to compile fine, but on linux, the compiler may barf on it and see it as
 undefined. So to fix this:
   - Remove underscore on src/call.s => Line 6, 7, 9, and 13
   - Remove underscore on src/open.s => Line 2, 3, 16, 33, and 44
+2. If you are going to use a test user in linux, such as `adduser teeesting`, and
+then switch to that user, there is some funky bug with fprintf permissions when
+copying everything to the receipt with option #4 in the `main` executable. So I'd
+suggest running `sudo chown $DIFF_USER:$DIFF_USER *` inside the project directory
+and basically reassign permissions to your test user.
