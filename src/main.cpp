@@ -46,10 +46,11 @@ int main() {
   #endif
 
   show();
+  char *new_name;
   #ifdef __APPLE__
-    std::cout << user_request() << std::endl;
+    new_name = user_request();
+    std::cout << new_name << std::endl;
   #else
-    char *new_name;
     new_name = is_repeated(user_request());
     std::cout << new_name << std::endl;
   #endif
@@ -118,7 +119,7 @@ int main() {
       }
     } else if(menu_choice == "4") {
       std::cout << "Storing receipt to text file.." << std::endl << std::endl;
-      receipt(cust_id, user_request(), total, ordered);
+      receipt(cust_id, new_name, total, ordered);
     } else if(menu_choice == "5") {
       exit(-1);
     } else if(menu_choice == "6") {
