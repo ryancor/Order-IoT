@@ -50,7 +50,7 @@ int main() {
     std::cout << user_request() << std::endl;
   #else
     char *new_name;
-    strncpy(new_name, is_repeated(user_request()), sizeof(user_request()));
+    new_name = is_repeated(user_request());
     std::cout << new_name << std::endl;
   #endif
 
