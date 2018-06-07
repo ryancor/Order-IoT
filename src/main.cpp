@@ -46,7 +46,13 @@ int main() {
   #endif
 
   show();
-  std::cout << user_request() << std::endl;
+  #ifdef __APPLE__
+    std::cout << user_request() << std::endl;
+  #else
+    char *new_name;
+    strncpy(new_name, is_repeated(user_request()), sizeof(user_request()));
+    std::cout << new_name << std::endl;
+  #endif
 
   if(open_or_closed() == 1) {
     std::cout << "Open: " << "true" << std::endl;
