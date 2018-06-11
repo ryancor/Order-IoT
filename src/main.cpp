@@ -6,6 +6,13 @@
 #ifdef __unix__
 #include <stdlib.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/ioctl.h>
+
+#include "driver/query_ioctl.h"
 #endif
 
 #include "../include/helper.hpp"
@@ -120,6 +127,25 @@ int main() {
     } else if(menu_choice == "4") {
       std::cout << "Storing receipt to text file.." << std::endl << std::endl;
       receipt(cust_id, new_name, total, ordered);
+
+      // store price in the kernel
+      #if __unix__
+        char *file_name = "/dev/query_driver";
+        int fd;
+        query_arg_t q;
+
+        fd = open(file_name, O_RDWR);
+
+        if (fd == -1) {
+          perror("main query_driver open");
+        }
+
+        q.price = total;
+
+        if (ioctl(fd, QUERY_SET_VARIABLES, &q) == -1) {
+          perror("main ioctl set");
+        }
+      #endif
     } else if(menu_choice == "5") {
       exit(-1);
     } else if(menu_choice == "6") {
