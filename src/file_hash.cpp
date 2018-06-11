@@ -20,7 +20,7 @@ unsigned char md5_result[MD5_DIGEST_LENGTH];
 unsigned char sha_result[SHA256_DIGEST_LENGTH];
 
 string hash_print(unsigned char *md, size_t length) {
-  int i;
+  size_t i;
   string res;
 
   printf("[+] ");
