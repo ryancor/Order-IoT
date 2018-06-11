@@ -43,6 +43,13 @@ Receipt Created Successfully.
     - sudo service mysql start
 6. chmod +x install.sh
 7. ./install.sh
+  - For linux
+    - Make sure drivers installed correctly by typing `dmesg` into terminal
+    - Should see output like this
+    ```
+    [11054.294752] Query IOCTL: mod loaded!
+    [11054.296781] Query Driver: Loaded successfully into /dev/!
+    ```
 
 # Create Mysql DB
 1. For Mac & Linux:
