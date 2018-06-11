@@ -3,3 +3,13 @@ main
 receipt.txt
 main.dSYM
 lib/libpal.so
+driver/.tmp_versions
+driver/.query_ioctl.ko.cmd
+driver/.query_ioctl.mod.o.cmd
+driver/.query_ioctl.o.cmd
+driver/Module.symvers
+driver/modules.order
+driver/query_ioctl.mod.c
+driver/query_ioctl.mod.o
+driver/query_ioctl.o
+driver/query_ioctl.ko
