@@ -1,4 +1,5 @@
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
+OS=`uname`
+if [ "${OS}" = "Linux" ] ; then
   cd driver
   make
   sudo insmod query_ioctl.ko
