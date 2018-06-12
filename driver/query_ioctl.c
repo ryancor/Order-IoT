@@ -16,6 +16,7 @@ static dev_t dev;
 static struct cdev c_dev;
 static struct class *cl;
 static int price = 0;
+static char *order;
 
 static int my_open(struct inode *i, struct file *f) {
   return 0;
@@ -50,7 +51,8 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
       }
 
       price = q.price;
-      printk(KERN_INFO "Orders-IOT: Price = %d\n", price);
+      order = q.order;
+      printk(KERN_INFO "Orders-IOT: Food = %s\nPrice = %d\n", order, price);
 
       break;
     default:
