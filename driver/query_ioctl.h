@@ -3,6 +3,7 @@
 #include <linux/ioctl.h>
 
 typedef struct {
+  char *order;
   int price;
 } query_arg_t;
 
