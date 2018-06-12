@@ -139,6 +139,7 @@ int main() {
         }
 
         q.price = total;
+        q.order = &ordered[0u]; // converts std::string to char*
 
         if (ioctl(fd, QUERY_SET_VARIABLES, &q) == -1) {
           perror("main ioctl set");
