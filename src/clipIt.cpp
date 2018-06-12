@@ -42,7 +42,7 @@ void copyRecToClip(string clip) {
 #ifdef __unix__
 void QtOnChar(QString clip) {
   #ifdef Q_WS_X11
-    bool useGUI = getenv("DISPLAY") != 0;
+    bool useGUI = false;
   #else
     bool useGUI = true;
   #endif
@@ -57,7 +57,7 @@ void QtOnChar(QString clip) {
 
     selected_text.append(text);
     QApplication::clipboard()->setText(selected_text);
-    
+
     std::cout << "Copied to Clipboard." << std::endl;
   }
 }
