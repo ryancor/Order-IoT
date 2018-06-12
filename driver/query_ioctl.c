@@ -25,6 +25,16 @@ static int my_close(struct inode *i, struct file *f) {
   return 0;
 }
 
+/*
+  Type name    32-bit type    64-bit type
+
+  SInt32       long           int
+
+  UInt32       unsigned long  unsigned int
+
+  Checking to see if kernel is 32bit
+*/
+
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,35))
 static int my_ioctl(struct inode *i, struct file *f, unsigned int cmd, unsigned long arg)
 #else
