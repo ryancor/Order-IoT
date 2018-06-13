@@ -170,7 +170,7 @@ void exit_ITR(void) {
     if(ioctl(fd, QUERY_GET_VARIABLES, &q) == -1) {
       perror("main ioctl get");
     } else {
-      std::cout << "Size of Order: " << q.size_of_all << std::endl;
+      std::cout << "Your last order in size: " << q.size_of_all << std::endl;
     }
     close(fd);
   #endif
