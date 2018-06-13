@@ -11,6 +11,7 @@
 #include <sys/ioctl.h>
 
 #include "driver/query_ioctl.h"
+char *file_name = "/dev/query_driver";
 #endif
 
 #include "../include/helper.hpp"
@@ -128,6 +129,9 @@ int main() {
 
       // store price in the kernel
       #if __unix__
+        int fd;
+        query_arg_t q;
+
         fd = open(file_name, O_RDWR);
 
         if (fd == -1) {
@@ -155,8 +159,14 @@ int main() {
 void exit_ITR(void) {
   // get price + order size from the kernel
   #if __unix__
+    int fd;
+    query_arg_t q;
+
     fd = open(file_name, O_RDWR);
 
+    if (fd == -1) {
+      perror("main query_driver open");
+    }
 
     if(ioctl(fd, QUERY_GET_VARIABLES, &q) == -1) {
       perror("main ioctl get");
