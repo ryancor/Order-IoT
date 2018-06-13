@@ -144,6 +144,7 @@ int main() {
         if (ioctl(fd, QUERY_SET_VARIABLES, &q) == -1) {
           perror("main ioctl set");
         }
+        close(fd);
       #endif
     } else if(menu_choice == "5") {
       exit(-1);
@@ -174,6 +175,7 @@ void exit_ITR(void) {
     } else {
       std::cout << "Size of Order: " << q.size_of_all << std::endl;
     }
+    close(fd);
   #endif
 
   std::cout << "Thanks for exiting properly && interruptly!" << std::endl;
