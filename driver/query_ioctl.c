@@ -58,7 +58,10 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
     case QUERY_GET_VARIABLES:
       q.price = price;
       q.order = order;
-      q.size_of_all = price + strlen(order);
+
+      if(order && price > 0) {
+        q.size_of_all = price + (sizeof(order) >> 2);
+      }
 
       if(copy_to_user((query_arg_t *)arg, &q, sizeof(query_arg_t))) {
         return -EACCES;
