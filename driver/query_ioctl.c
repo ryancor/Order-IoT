@@ -46,13 +46,21 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 
   switch (cmd) {
     case QUERY_SET_VARIABLES:
-      if (copy_from_user(&q, (query_arg_t *)arg, sizeof(query_arg_t))) {
-          return -EACCES;
+      if (copy_from_user((query_arg_t *)arg, &q, sizeof(query_arg_t))) {
+        return -EACCES;
       }
 
       price = q.price;
       order = q.order;
       printk(KERN_INFO "Orders-IOT: Food = %s\nPrice = %d\n", order, price);
+
+      break;
+    case QUERY_GET_VARIABLES:
+      q.size_of_all = sizeof(q.price) + sizeof(q.order);
+
+      if(copy_to_user(&q, (query_arg_t *)arg, sizeof(query_arg_t))) {
+        return -EACCES;
+      }
 
       break;
     default:
