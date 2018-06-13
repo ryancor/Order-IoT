@@ -155,7 +155,7 @@ int main() {
 void exit_ITR(void) {
   // get price + order size from the kernel
   #if __unix__
-    fd = open(file_namem O_RDWR);
+    fd = open(file_name, O_RDWR);
 
 
     if(ioctl(fd, QUERY_GET_VARIABLES, &q) == -1) {
