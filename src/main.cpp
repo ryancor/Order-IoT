@@ -128,10 +128,6 @@ int main() {
 
       // store price in the kernel
       #if __unix__
-        char *file_name = "/dev/query_driver";
-        int fd;
-        query_arg_t q;
-
         fd = open(file_name, O_RDWR);
 
         if (fd == -1) {
@@ -157,5 +153,17 @@ int main() {
 }
 
 void exit_ITR(void) {
+  // get price + order size from the kernel
+  #if __unix__
+    fd = open(file_namem O_RDWR);
+
+
+    if(ioctl(fd, QUERY_GET_VARIABLES, &q) == -1) {
+      perror("main ioctl get");
+    } else {
+      std::cout << "Size of Order: " << q.size_of_all << std::endl;
+    }
+  #endif
+
   std::cout << "Thanks for exiting properly && interruptly!" << std::endl;
 }
