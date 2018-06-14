@@ -212,8 +212,13 @@ void findForeignFiles() {
         if(has_suffix(ent->d_name, ext[i])) {
           // exclude our install script
           if(strncmp(ent->d_name, "install.sh", 10)) {
-            std::cout << std::endl << "[!] Found malicious file: " << ent->d_name <<
-            std::endl;
+            if(get_file_size(ent->d_name) > 1) {
+              std::cout << std::endl << "[!] Found malicious file: " << ent->d_name <<
+              std::endl;
+            } else {
+              std::cout << std::endl << "[!] Found empty foreign file: " << ent->d_name <<
+              std::endl;
+            }
 
             // send data
             try {
