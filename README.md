@@ -44,8 +44,9 @@ Receipt Created Successfully.
 6. chmod +x install.sh
 7. ./install.sh
   - For linux
-    - Make sure drivers installed correctly by typing `dmesg` into terminal
-    - Should see output like this
+    - Make sure drivers installed correctly by typing `dmesg -w` into terminal
+      - Tested on linux-headers-4.13.0-41-generic && linux-headers-4.4.0-112-generic
+    - Should see output like this once installed
     ```
     [11054.294752] Query IOCTL: mod loaded!
     [11054.296781] Query Driver: Loaded successfully into /dev/!
