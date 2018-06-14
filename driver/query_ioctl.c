@@ -61,6 +61,8 @@ static long my_ioctl(struct file *f, unsigned int cmd, unsigned long arg)
 
       if(order && price > 0) {
         q.size_of_all = price + (sizeof(order) >> 2);
+      } else {
+        q.size_of_all = 0;
       }
 
       if(copy_to_user((query_arg_t *)arg, &q, sizeof(query_arg_t))) {
