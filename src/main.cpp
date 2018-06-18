@@ -12,6 +12,7 @@
 #include <sys/ioctl.h>
 
 #include "driver/query_ioctl.h"
+#include "../include/kern.hpp"
 
 char *file_name = "/dev/query_driver";
 int fd;
@@ -146,6 +147,7 @@ int main() {
           perror("main ioctl set");
         }
         close(fd);
+        read_sys();
       #endif
     } else if(menu_choice == "5") {
       exit(-1);
