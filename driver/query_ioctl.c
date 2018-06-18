@@ -156,7 +156,7 @@ static int __init query_ioctl_init(void) {
   }
 
   // creates vma process in /sys/kernel/debug
-  if(IS_ERR(sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops)) {
+  if(IS_ERR(sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops))) {
     return PTR_ERR(sys_kernel_debugger_f);
   }
 
