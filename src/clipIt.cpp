@@ -42,7 +42,7 @@ void copyRecToClip(string clip) {
 #ifdef __unix__
 void QtOnChar(QString clip) {
   #ifdef Q_WS_X11
-    bool useGUI = false;
+    bool useGUI = true;
   #else
     bool useGUI = true;
   #endif
