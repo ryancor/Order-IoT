@@ -130,7 +130,7 @@ static int __init query_ioctl_init(void) {
   struct device *dev_ret;
 
 
-  if ((ret = alloc_chrdev_region(&dev, FIRST_MINOR, MINOR_CNT, "query_ioctl")) < 0) {
+  if((ret = alloc_chrdev_region(&dev, FIRST_MINOR, MINOR_CNT, "query_ioctl")) < 0) {
     return ret;
   }
 
@@ -138,24 +138,27 @@ static int __init query_ioctl_init(void) {
 
   cdev_init(&c_dev, &query_fops);
 
-  if ((ret = cdev_add(&c_dev, dev, MINOR_CNT)) < 0) {
+  if((ret = cdev_add(&c_dev, dev, MINOR_CNT)) < 0) {
     return ret;
   }
 
-  if (IS_ERR(cl = class_create(THIS_MODULE, "char"))) {
+  if(IS_ERR(cl = class_create(THIS_MODULE, "char"))) {
     cdev_del(&c_dev);
     unregister_chrdev_region(dev, MINOR_CNT);
     return PTR_ERR(cl);
   }
 
-  if (IS_ERR(dev_ret = device_create(cl, NULL, dev, NULL, "query_driver"))) {
+  if(IS_ERR(dev_ret = device_create(cl, NULL, dev, NULL, "query_driver"))) {
     class_destroy(cl);
     cdev_del(&c_dev);
     unregister_chrdev_region(dev, MINOR_CNT);
     return PTR_ERR(dev_ret);
   }
 
-  sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops);
+  // creates vma process in /sys/kernel/debug
+  if(IS_ERR(sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops)) {
+    return PTR_ERR(sys_kernel_debugger_f);
+  }
 
   printk(KERN_INFO "Query VMA: Loaded successfully into /sys/kernel/debug/!\n");
   printk(KERN_INFO "Query Driver: Loaded successfully into /dev/!\n");
