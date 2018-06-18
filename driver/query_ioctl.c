@@ -17,8 +17,11 @@ static struct cdev c_dev;
 static struct class *cl;
 static int price = 0;
 static char *order;
+static int numberOfOpens = 0;
 
 static int my_open(struct inode *i, struct file *f) {
+  numberOfOpens++;
+  printk(KERN_INFO "Query Driver: Has been updated %d time(s).\n", numberOfOpens);
   return 0;
 }
 
