@@ -2,10 +2,12 @@
 #include <linux/kernel.h>
 #include <linux/version.h>
 #include <linux/fs.h>
+#include <linux/debugfs.h>
 #include <linux/cdev.h>
 #include <linux/device.h>
 #include <linux/errno.h>
 #include <linux/uaccess.h>
+#include <linux/mm.h>
 
 #include "query_ioctl.h"
 
@@ -15,9 +17,40 @@
 static dev_t dev;
 static struct cdev c_dev;
 static struct class *cl;
+struct dentry *sys_kernel_debugger_f;
 static int price = 0;
 static char *order;
 static int numberOfOpens = 0;
+
+
+// VMA ops -> this only opens when mmap is opened at /sys/kernel/debug/
+void vma_open(struct vm_area_struct *vma) {
+  printk(KERN_NOTICE "Quey Driver: VMA Open -> virt %lx, phys %lx\n",
+    vma->vm_start, vma->vm_pgoff << PAGE_SHIFT);
+}
+
+void vma_close(struct vm_area_struct *vma) {
+  printk(KERN_NOTICE "Query Driver: VMA Close.");
+}
+
+static struct vm_operations_struct remap_vm_ops = {
+  .open = vma_open,
+  .close = vma_close,
+};
+
+static int remap_mmap(struct file *filp, struct vm_area_struct *vma) {
+  if(remap_pfn_range(vma, vma->vm_start, vma->vm_pgoff, vma->vm_end - vma->vm_start,
+    vma->vm_page_prot)) {
+      return -EAGAIN;
+    }
+
+  // initializing the vm_operations struct type
+  vma->vm_ops = &remap_vm_ops;
+  vma_open(vma);
+  return 0;
+}
+
+// end of VMA
 
 static int my_open(struct inode *i, struct file *f) {
   numberOfOpens++;
@@ -85,10 +118,11 @@ static struct file_operations query_fops = {
   .open = my_open,
   .release = my_close,
 #if (LINUX_VERSION_CODE < KERNEL_VERSION(2,6,35))
-  .ioctl = my_ioctl
+  .ioctl = my_ioctl,
 #else
-  .unlocked_ioctl = my_ioctl
+  .unlocked_ioctl = my_ioctl,
 #endif
+  .mmap = remap_mmap,
 };
 
 static int __init query_ioctl_init(void) {
@@ -121,6 +155,9 @@ static int __init query_ioctl_init(void) {
     return PTR_ERR(dev_ret);
   }
 
+  sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops);
+
+  printk(KERN_INFO "Query VMA: Loaded successfully into /sys/kernel/debug/!\n");
   printk(KERN_INFO "Query Driver: Loaded successfully into /dev/!\n");
 
   return 0;
@@ -131,6 +168,8 @@ static void __exit query_ioctl_exit(void) {
   class_destroy(cl);
   cdev_del(&c_dev);
   unregister_chrdev_region(dev, MINOR_CNT);
+
+  debugfs_remove(sys_kernel_debugger_f);
 
   printk(KERN_ALERT "Query Driver: Removed from /dev/!\n");
 }
