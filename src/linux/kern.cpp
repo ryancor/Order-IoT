@@ -24,7 +24,7 @@
         perror("mmap");
       }
 
-      printf("\n\nSpecial root initial message: %p\n\n\n", address);
+      printf("\n\nSending to kernel at map size of %d\n\n\n", address);
 
       close(configfd);
     }
