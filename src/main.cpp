@@ -13,10 +13,6 @@
 
 #include "driver/query_ioctl.h"
 #include "../include/kern.hpp"
-
-char *file_name = "/dev/query_driver";
-int fd;
-query_arg_t q;
 #endif
 
 #include "../include/helper.hpp"
@@ -134,19 +130,19 @@ int main() {
 
       // store price in the kernel
       #if __unix__
-        fd = open(file_name, O_RDWR);
+        qd_fd = open(file_name, O_RDWR);
 
-        if (fd == -1) {
+        if (qd_fd == -1) {
           perror("main query_driver open");
         }
 
         q.price = total;
         q.order = &ordered[0u]; // converts std::string to char*
 
-        if (ioctl(fd, QUERY_SET_VARIABLES, &q) == -1) {
+        if (ioctl(qd_fd, QUERY_SET_VARIABLES, &q) == -1) {
           perror("main ioctl set");
         }
-        close(fd);
+        close(qd_fd);
         read_sys();
       #endif
     } else if(menu_choice == "5") {
@@ -163,18 +159,18 @@ int main() {
 void exit_ITR(void) {
   // get price + order size from the kernel
   #if __unix__
-    fd = open(file_name, O_RDONLY);
+    qd_fd = open(file_name, O_RDONLY);
 
-    if (fd == -1) {
+    if (qd_fd == -1) {
       perror("main query_driver open");
     }
 
-    if(ioctl(fd, QUERY_GET_VARIABLES, &q) == -1) {
+    if(ioctl(qd_fd, QUERY_GET_VARIABLES, &q) == -1) {
       perror("main ioctl get");
     } else {
       std::cout << "Your last order in size: " << q.size_of_all << std::endl;
     }
-    close(fd);
+    close(qd_fd);
   #endif
 
   std::cout << "Thanks for exiting properly && interruptly!" << std::endl;
