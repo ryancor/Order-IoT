@@ -9,6 +9,10 @@
   #define PAGE_SIZE     4096
   #define KERNEL_FILE   "/sys/kernel/debug/query_vma"
 
+  char *file_name = "/dev/query_driver";
+  int qd_fd;
+  query_arg_t q;
+
   void read_sys() {
     if(getuid() == 0) {
       int configfd;
