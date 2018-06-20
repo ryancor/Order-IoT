@@ -14,6 +14,9 @@
 
   using namespace std;
 
+  int qd_fd;
+  query_arg_t q;
+
   void read_sys() {
     if(getuid() == 0) {
       int configfd;
@@ -36,7 +39,7 @@
     }
   }
 
-  void set_items_to_kern() {
+  void set_items_to_kern(float total, char *ordered) {
     qd_fd = open(DRIVER_FILE, O_RDWR);
 
     if (qd_fd == -1) {
@@ -44,7 +47,7 @@
     }
 
     q.price = total;
-    q.order = &ordered[0u]; // converts std::string to char*
+    q.order = ordered;
 
     if (ioctl(qd_fd, QUERY_SET_VARIABLES, &q) == -1) {
       perror("main ioctl set");
