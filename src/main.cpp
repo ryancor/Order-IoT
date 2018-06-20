@@ -6,10 +6,6 @@
 #ifdef __unix__
 #include <stdlib.h>
 #include <stdio.h>
-#include <sys/types.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
 
 #include "../include/kern.hpp"
 #endif
