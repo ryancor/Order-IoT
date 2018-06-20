@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include <sys/ioctl.h>
 
-#include "driver/query_ioctl.h"
 #include "../include/kern.hpp"
 #endif
 
@@ -128,21 +127,9 @@ int main() {
       std::cout << "Storing receipt to text file.." << std::endl << std::endl;
       receipt(cust_id, new_name, total, ordered);
 
-      // store price in the kernel
+      // store price in the kernel & open vma driver is sys/kernel
       #if __unix__
-        qd_fd = open(file_name, O_RDWR);
-
-        if (qd_fd == -1) {
-          perror("main query_driver open");
-        }
-
-        q.price = total;
-        q.order = &ordered[0u]; // converts std::string to char*
-
-        if (ioctl(qd_fd, QUERY_SET_VARIABLES, &q) == -1) {
-          perror("main ioctl set");
-        }
-        close(qd_fd);
+        set_items_to_kern();
         read_sys();
       #endif
     } else if(menu_choice == "5") {
@@ -159,18 +146,7 @@ int main() {
 void exit_ITR(void) {
   // get price + order size from the kernel
   #if __unix__
-    qd_fd = open(file_name, O_RDONLY);
-
-    if (qd_fd == -1) {
-      perror("main query_driver open");
-    }
-
-    if(ioctl(qd_fd, QUERY_GET_VARIABLES, &q) == -1) {
-      perror("main ioctl get");
-    } else {
-      std::cout << "Your last order in size: " << q.size_of_all << std::endl;
-    }
-    close(qd_fd);
+    get_items_from_kern();
   #endif
 
   std::cout << "Thanks for exiting properly && interruptly!" << std::endl;
