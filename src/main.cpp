@@ -125,7 +125,8 @@ int main() {
 
       // store price in the kernel & open vma driver is sys/kernel
       #if __unix__
-        set_items_to_kern();
+        // ordered is a string, and we must convert it to a char*
+        set_items_to_kern(total, &ordered[0u]);
         read_sys();
       #endif
     } else if(menu_choice == "5") {
