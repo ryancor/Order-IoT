@@ -6,6 +6,8 @@
   #include <fcntl.h>
   #include <unistd.h>
   #include <sys/mman.h>
+  #include <sys/types.h>
+  #include <sys/ioctl.h>
 
   #include "../../driver/query_ioctl.h"
   #include "../../include/kern.hpp"
