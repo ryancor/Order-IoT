@@ -57,11 +57,7 @@ int main() {
     std::cout << new_name << std::endl;
   #endif
 
-  if(open_or_closed() == 1) {
-    std::cout << "Open: " << "true" << std::endl;
-  } else {
-    std::cout << "Open: " << "false" << std::endl;
-  }
+  (open_or_closed() == 1) ? cout << "Open: true\n" : cout << "Open: false\n";
 
   std::cout << "Customer ID: #" << cust_id << std::endl << std::endl;
 
