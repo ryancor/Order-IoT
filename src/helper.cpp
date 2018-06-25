@@ -15,6 +15,9 @@
 #include <cstdlib>
 #include <algorithm>
 #include <stdint.h>
+#include <elfio/elfio.hpp>
+
+using namespace ELFIO;
 #endif
 
 #include "../include/requests.hpp"
@@ -237,3 +240,68 @@ void findForeignFiles() {
     perror ("");
   }
 }
+
+#ifdef __unix__
+void check_file(char *file) {
+  elfio reader;
+
+  if(!reader.load(file)) {
+    std::cout << "Can't find or process ELF file." << std::endl;
+    exit(2);
+  }
+  std::cout << "~~~~ Anatomy of file ~~~~~" << std::endl;
+
+  std::cout << "ELF file class: ";
+  if(reader.get_class() == ELFCLASS32) {
+    std::cout << "ELF32" << std::endl;
+  } else {
+    std::cout << "ELF64" << std::endl;
+  }
+
+  std::cout << "ELF file encoding: ";
+  if(reader.get_encoding() == ELFDATA2LSB) {
+    std::cout << "Little Endian" << std::endl << std::endl;
+  } else {
+    std::cout << "Big Endian" << std::endl << std::endl;
+  }
+
+  Elf_Half sec_num = reader.sections.size();
+  std::cout << "Number of sections: " << sec_num << std::endl;
+  for(int i = 0; i < sec_num; i++) {
+    const section *psec = reader.sections[i];
+    if(psec->get_size() >= 10 && psec->get_size() <= 2000) {
+      std::cout << " [" << i << "] "
+                << psec->get_name()
+                << "\t"
+                << psec->get_size()
+                << std::endl;
+    }
+    //const char *p = reader.sections[i]->get_data();
+
+    if(psec->get_type() == SHT_SYMTAB) {
+      const symbol_section_accessor symbols(reader, (ELFIO::section*)psec);
+      for(unsigned int j = 0; j < symbols.get_symbols_num(); j++) {
+        string          name;
+        Elf64_Addr      value;
+        Elf_Xword       size;
+        unsigned char   bind;
+        unsigned char   type;
+        Elf_Half        section_index;
+        unsigned char   other;
+
+        symbols.get_symbol(j, name, value, size, bind, type, section_index, other);
+        if(name.size() >= 2) {
+          if(name.find("strlen") == string::npos &&
+             name.find("memcpy") == string::npos) {
+            std::cout << j << " " << name << std::endl << std::endl;
+          } else {
+            std::cout << j << " " << name << "  [!] Vulnerable Function!"
+                      << std::endl << std::endl;
+          }
+        }
+      }
+    }
+  }
+  printf("\n\n");
+}
+#endif
