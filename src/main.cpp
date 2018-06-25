@@ -31,11 +31,20 @@ double pick_price(int x) {
   return f.price_1;
 }
 
-int main() {
+int main(int argc, char **argv) {
   string menu_choice, ordered;
   unsigned long cust_id = customer_id();
   int food_choice, remove_choice;
   float total = 0.00;
+
+  if(argc >= 2) {
+    #ifdef __unix__
+      check_file(argv[1]);
+    #else
+      std::cout << "./main <elf_file>" << std::endl;
+    #endif
+    exit(0);
+  }
 
   #ifdef __unix__
   #include "../lib/pal.hpp"
