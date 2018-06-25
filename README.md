@@ -36,6 +36,7 @@ Receipt Created Successfully.
     - brew install mysql
     - mysql.server start
   - Linux
+    - Clone && Make: https://github.com/serge1/ELFIO
     - sudo apt-get install libmysqlclient20
     - sudo apt-get install libmysqlclient-dev
     - sudo apt-get install mysql-client-core-5.7
