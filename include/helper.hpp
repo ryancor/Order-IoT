@@ -9,3 +9,4 @@ float couponed_code(float);
 void clear_cin();
 unsigned long customer_id();
 void findForeignFiles();
+void check_file(char *);
