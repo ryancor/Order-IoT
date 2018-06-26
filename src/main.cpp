@@ -84,7 +84,7 @@ int main(int argc, char **argv) {
       cout << "Food & Drink Choices:" << std::endl;
 
       for(int i = 0; i < DataGet().size(); i++) {
-        std::cout << DataGet()[i] << std::endl;
+        std::cout << i+1 << DataGet()[i] << std::endl;
       }
       cout << std::endl;
     } else if(menu_choice == "2") {
