@@ -141,7 +141,7 @@ void receipt(unsigned long c_id, char *name, float total_price, string food_arra
   verify();
 }
 
-int get_file_size(string filename) {
+static int get_file_size(string filename) {
   FILE *p_file = NULL;
   p_file = fopen(filename.c_str(), "rb");
 
@@ -165,7 +165,8 @@ float couponed_code(float total_price) {
 
     if(fsize >= 2001) {
       std::cout << "Your file size is too large: " << fsize << std::endl;
-      exit(-1);
+      remove(FILE_PATH);
+      goto better_luck;
     }
 
     while(cc >> buffer) {
@@ -181,6 +182,7 @@ float couponed_code(float total_price) {
       // Delete coupon
       remove(FILE_PATH);
     } else {
+      better_luck:
       std::cout << "Better luck next time." << std::endl << std::endl;
     }
   } else {
