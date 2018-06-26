@@ -41,10 +41,15 @@ void start_tbl(MYSQL *con, const char * HOST, const char * USER, const char * PA
       finish_with_error(con);
   }
 
-  insert_data(con, 1, base64_encode((const unsigned char*)"1. Hamburger : $ 3.25", 22));
-  insert_data(con, 2, base64_encode((const unsigned char*)"2. Grilled-Cheese : $ 2.50", 27));
-  insert_data(con, 3, base64_encode((const unsigned char*)"3. Fries : $ 2.00", 18));
-  insert_data(con, 4, base64_encode((const unsigned char*)"4. Soda : $ 1.00", 17));
+  const char* hb = ". Hamburger : $ 3.25";
+  const char* gc = ". Grilled-Cheese : $ 2.50";
+  const char* fs = ". Fries : $ 2.00";
+  const char* sd = ". Soda : $ 1.00";
+
+  insert_data(con, 1, base64_encode((const unsigned char*)hb, strlen(hb)));
+  insert_data(con, 2, base64_encode((const unsigned char*)gc, strlen(gc)));
+  insert_data(con, 3, base64_encode((const unsigned char*)fs, strlen(fs)));
+  insert_data(con, 4, base64_encode((const unsigned char*)sd, strlen(sd)));
 }
 
 vector<string> DataGet() {
