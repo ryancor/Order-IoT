@@ -6,6 +6,7 @@
 #ifdef __unix__
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "../include/kern.hpp"
 #endif
