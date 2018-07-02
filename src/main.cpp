@@ -37,14 +37,27 @@ int main(int argc, char **argv) {
   int food_choice, remove_choice;
   float total = 0.00;
 
-  if(argc >= 2) {
-    #ifdef __unix__
-      check_file(argv[1]);
-    #else
-      std::cout << "./main <elf_file>" << std::endl;
-    #endif
-    exit(0);
-  }
+  // command line arguments
+  #ifdef __unix__
+    if(argc >= 2) {
+      if(strncmp(argv[1], "help", 4) == 0) {
+        std::cout << "./main <elf_file>" << std::endl;
+      } else {
+        check_file(argv[1]);
+      }
+      exit(0);
+    }
+  #else
+    if(argc == 3) {
+      if(strncmp(argv[1], "proxy", 4) == 0) {
+        send_through_proxy(argv[2]);
+        exit(0);
+      }
+    } else if(argc == 2) {
+      std::cout << "./main proxy <website>" << std::endl;
+      exit(0);
+    }
+  #endif
 
   #ifdef __unix__
   #include "../lib/pal.hpp"
