@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <pwd.h>
+#include <netdb.h>
+#include <sys/socket.h>
 
 #ifdef __APPLE__
 #include <boost/filesystem.hpp>
@@ -147,6 +149,86 @@ bool open_or_closed() {
   return false;
 }
 
+void send_through_proxy(char *web_addr) {
+  addrinfo host_info;
+  addrinfo *host_info_list;
+  int socketfd, status, len;
+  char *msg = NULL;
+  char *msg2 = NULL;
+
+  memset(&host_info, 0, sizeof(host_info));
+
+  host_info.ai_family = AF_INET;
+  host_info.ai_socktype = SOCK_STREAM;
+
+  status = getaddrinfo("127.0.0.1", "8080", &host_info, &host_info_list);
+
+  socketfd = socket(host_info_list->ai_family, host_info_list->ai_socktype,
+    host_info_list->ai_protocol);
+  if(socketfd == -1) {
+    std::cout << "ERROR: socket error" << std::endl;
+    exit(-1);
+  }
+
+  std::cout << "Connect()ing..."  << std::endl;
+
+  status = connect(socketfd, host_info_list->ai_addr, host_info_list->ai_addrlen);
+  if(status == -1) {
+    std::cout << "ERROR: connect error" << std::endl;
+    exit(-1);
+  }
+
+  // connect to proxy
+  msg = new char[200];
+  strcpy(msg, "CONNECT ");
+  strcat(msg, web_addr);
+  strcat(msg, " HTTP/1.0\r\n");
+  strcat(msg, "\r\n");
+
+  ssize_t bytes_sent;
+  len = strlen(msg);
+  bytes_sent = send(socketfd, msg, len, 0);
+
+  ssize_t bytes_recieved = 0;
+  std::cout << "Waiting to recieve data..."  << std::endl;
+
+  char *incoming_data_buffer = new char[200];
+  bytes_recieved = recv(socketfd, incoming_data_buffer, 200, 0);
+  if (bytes_recieved == 0) { std::cout << "host shut down." << std::endl; exit(-1); }
+  if (bytes_recieved == -1) { std::cout << "ERROR: receive error!" << std::endl; exit(-1); }
+  std::cout << bytes_recieved << " bytes recieved.." << std::endl;
+  std::cout << "Proxy Receive Status: "
+    << "HTTP/1.1 "
+    << split_up_char(incoming_data_buffer, 0)
+    << " OK"
+    << std::endl;
+
+  // message that needs to send to proxy
+  msg2 = new char[300];
+  strcpy(msg2, "GET ");
+  strcat(msg2, web_addr);
+  strcat(msg2, " HTTP/1.0\r\n\r\n");
+
+  std::cout << "Message sent to proxy: " << msg2 << std::endl;
+  len = strlen(msg2);
+  bytes_sent = send(socketfd, msg2, len, 0);
+  if(bytes_sent >= 300) {
+    std::cout << "ERROR: Web address too large." << std::endl;
+    exit(-1);
+  }
+  std::cout << "bytes_sent: " << bytes_sent << std::endl;
+
+  bytes_recieved = 0;
+  std::cout << "Waiting to recieve bytes.." << std::endl;
+  char* incoming_data_buffer2 = new char[1000];
+
+  bytes_recieved = recv(socketfd, incoming_data_buffer2, 1000, 0);
+
+  if (bytes_recieved == 0) { std::cout << "host shut down." << std::endl; exit(-1); }
+  if (bytes_recieved == -1) { std::cout << "ERROR: recieve error!" << std::endl; exit(-1); }
+  std::cout << bytes_recieved << " bytes recieved" << std::endl << std::endl;
+  //std::cout << incoming_data_buffer2 << std::endl << std::endl;
+}
 
 #ifdef __APPLE__
 // we aren't using boost yet
