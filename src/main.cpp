@@ -50,8 +50,8 @@ int main(int argc, char **argv) {
     }
   #else
     if(argc == 3) {
-      if(strncmp(argv[1], "proxy", 4) == 0) {
-        send_through_proxy(argv[2]);
+      if(strncmp(argv[1], "proxy", 5) == 0) {
+        send_through_proxy(argv[2], "127.0.0.1", "8080");
         exit(0);
       }
     } else if(argc == 2) {
