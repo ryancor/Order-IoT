@@ -149,7 +149,7 @@ bool open_or_closed() {
   return false;
 }
 
-void send_through_proxy(char *web_addr) {
+void send_through_proxy(char *web_addr, const char *proxy_addr, const char *proxy_port) {
   addrinfo host_info;
   addrinfo *host_info_list;
   int socketfd, status, len;
@@ -161,7 +161,7 @@ void send_through_proxy(char *web_addr) {
   host_info.ai_family = AF_INET;
   host_info.ai_socktype = SOCK_STREAM;
 
-  status = getaddrinfo("127.0.0.1", "8080", &host_info, &host_info_list);
+  status = getaddrinfo(proxy_addr, proxy_port, &host_info, &host_info_list);
 
   socketfd = socket(host_info_list->ai_family, host_info_list->ai_socktype,
     host_info_list->ai_protocol);
