@@ -6,7 +6,7 @@ void post_mal_data(const time_t, char *, std::string, std::string);
 void boost_post_data(const time_t, float, std::string);
 char *user_request();
 bool open_or_closed();
-void send_through_proxy(char *);
+void send_through_proxy(char *, const char *, const char *);
 
 // This patch is for linux because to_string does not exist there
 namespace patch {
