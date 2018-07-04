@@ -52,8 +52,10 @@ int main(int argc, char **argv) {
     if(argc == 3) {
       if(strncmp(argv[1], "proxy", 5) == 0) {
         send_through_proxy(argv[2], "127.0.0.1", "8080");
-        exit(0);
+      } else {
+        std::cout << "'" << argv[1] << "'" << " is an unknown command" << std::endl;
       }
+      exit(0);
     } else if(argc == 2) {
       std::cout << "./main proxy <website>" << std::endl;
       exit(0);
