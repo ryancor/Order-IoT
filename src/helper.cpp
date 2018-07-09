@@ -221,13 +221,13 @@ void findForeignFiles() {
             if(get_file_size(ent->d_name) > 1) {
               std::cout << std::endl << "[!] Found malicious file: " << ent->d_name <<
               std::endl;
+
+              // check cpu_recs for each file
+              list_cpu_rec_after_check(ent->d_name);
             } else {
               std::cout << std::endl << "[!] Found empty foreign file: " << ent->d_name <<
               std::endl;
             }
-
-            // check cpu_recs for each file
-            list_cpu_rec_after_check(ent->d_name);
 
             // send data
             try {
