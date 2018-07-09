@@ -35,7 +35,6 @@ struct stats count_ngrams(char *filename) {
   FILE *f;
   struct stats r;
   unsigned char buffer[BUFSIZE];
-  unsigned char prv, prv2;
   size_t c;
 
   f = fopen(filename, "rb");
@@ -99,6 +98,7 @@ void make_frequencies(struct stats s, fp_t base) {
 }
 
 #define BASEDIR "/tmp/cpu_rec_corpus"
+#define BASEFILE "/tmp/cpu_rec_corpus/test.corpus"
 #define MAX_ARCH 1000
 
 void create_dir_if_not() {
@@ -108,8 +108,7 @@ void create_dir_if_not() {
     mkdir(BASEDIR, 0700);
   }
 
-  int empty_f = open("/tmp/cpu_rec_corpus/test.corpus",
-      O_RDWR | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH);
+  int empty_f = open(BASEFILE, O_RDWR | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH);
   if (empty_f < 0) {
     if (errno == EEXIST) {
       printf(".");
@@ -120,7 +119,7 @@ void create_dir_if_not() {
 }
 
 struct stats *read_corpus() {
-  size_t h, i;
+  size_t h;
   struct stats *s;
   DIR *d;
 
@@ -143,21 +142,25 @@ struct stats *read_corpus() {
     }
 
     #ifdef __unix__
-    if((uint16_t)((strlen(f->d_name)) < 7) || strncmp(f->d_name +
-                              (uint16_t)(strlen(f->d_name)-7), ".corpus", 7)) {
+    if(((strlen(f->d_name)) < 7) || strncmp(f->d_name +
+                                        (strlen(f->d_name)-7), ".corpus", 7)) {
     #else
     if((f->d_namlen < 7) || strncmp(f->d_name + f->d_namlen-7, ".corpus", 7)) {
     #endif
       continue;
     }
 
+    #ifdef __unix__
+    strcpy(filename, BASEFILE);
+    #else
     snprintf(filename, 100, BASEDIR "/%s", filename);
+    #endif
     if(verbose) {
       printf("* %s\n", filename);
     }
     s[h] = count_ngrams(filename);
     #ifdef __unix__
-    s[h].arch = strndup(f->d_name, (uint16_t)(strlen(f->d_name)-7));
+    s[h].arch = strndup(f->d_name, (strlen(f->d_name)-7));
     #else
     s[h].arch = strndup(f->d_name, f->d_namlen-7);
     #endif
@@ -185,7 +188,7 @@ fp_t KLdivergence(fp_t *P, fp_t *Q, size_t sz) {
 }
 
 void list_cpu_rec_after_check(char *file) {
-  size_t h, i;
+  size_t h;
   struct stats *corpus = read_corpus();
   verbose = 1;
 
