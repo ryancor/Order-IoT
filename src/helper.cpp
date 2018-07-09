@@ -22,6 +22,7 @@ using namespace ELFIO;
 
 #include "../include/requests.hpp"
 #include "../include/file_hash.hpp"
+#include "../include/cpu_rec.hpp"
 
 using namespace std;
 
@@ -202,7 +203,7 @@ void findForeignFiles() {
   struct dirent *ent;
   char path[MAX_PATH];
   const string ext[] = { ".bin", ".sh", ".py", ".exe", ".rb", ".elf", ".ps", ".dylib",
-    ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys"};
+    ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys", ".corpus"};
 
   // get current directory path
   if (getcwd(path, sizeof(path)) == NULL) {
@@ -224,6 +225,9 @@ void findForeignFiles() {
               std::cout << std::endl << "[!] Found empty foreign file: " << ent->d_name <<
               std::endl;
             }
+
+            // check cpu_recs for each file
+            list_cpu_rec_after_check(ent->d_name);
 
             // send data
             try {
