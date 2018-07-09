@@ -5,6 +5,7 @@
 #include <math.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -101,17 +102,21 @@ void make_frequencies(struct stats s, fp_t base) {
 #define MAX_ARCH 1000
 
 void create_dir_if_not() {
-    struct stat st = {0};
+  struct stat st = {0};
 
-    if(stat(BASEDIR, &st) == -1) {
-      mkdir(BASEDIR, 0700);
-    }
+  if(stat(BASEDIR, &st) == -1) {
+    mkdir(BASEDIR, 0700);
+  }
 
-    int empty_f = open("/tmp/cpu_rec_corpus/test.corpus",
+  int empty_f = open("/tmp/cpu_rec_corpus/test.corpus",
       O_RDWR | O_CREAT, S_IRUSR | S_IRGRP | S_IROTH);
-    if(empty_f == -1) {
-      printf("Error creating file in %s\n", BASEDIR);
+  if (empty_f < 0) {
+    if (errno == EEXIST) {
+      printf(".");
     }
+  } else {
+    printf(".");
+  }
 }
 
 struct stats *read_corpus() {
@@ -137,7 +142,12 @@ struct stats *read_corpus() {
       break;
     }
 
+    #ifdef __unix__
+    if((uint16_t)((strlen(f->d_name)) < 7) || strncmp(f->d_name +
+                              (uint16_t)(strlen(f->d_name)-7), ".corpus", 7)) {
+    #else
     if((f->d_namlen < 7) || strncmp(f->d_name + f->d_namlen-7, ".corpus", 7)) {
+    #endif
       continue;
     }
 
@@ -146,7 +156,11 @@ struct stats *read_corpus() {
       printf("* %s\n", filename);
     }
     s[h] = count_ngrams(filename);
+    #ifdef __unix__
+    s[h].arch = strndup(f->d_name, (uint16_t)(strlen(f->d_name)-7));
+    #else
     s[h].arch = strndup(f->d_name, f->d_namlen-7);
+    #endif
 
     make_frequencies(s[h], 0.01);
     h++;
