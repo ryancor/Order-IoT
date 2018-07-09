@@ -34,7 +34,7 @@ struct stats count_ngrams(char *filename) {
   // allocate 128mbs
   FILE *f;
   struct stats r;
-  unsigned char buffer[BUFSIZE];
+  unsigned char buffer[BUFSIZE+BUFSIZE];
   size_t c;
 
   f = fopen(filename, "rb");
