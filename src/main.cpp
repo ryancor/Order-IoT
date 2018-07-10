@@ -35,7 +35,7 @@ double pick_price(int x) {
 int main(int argc, char **argv) {
   string menu_choice, ordered;
   unsigned long cust_id = customer_id();
-  int food_choice, remove_choice;
+  int food_choice, remove_choice, ordered_count = 0;
   float total = 0.00;
 
   // command line arguments
@@ -141,15 +141,22 @@ int main(int argc, char **argv) {
         std::cout << "You haven't ordered anything." << std::endl;
       }
     } else if(menu_choice == "4") {
-      std::cout << "Storing receipt to text file.." << std::endl << std::endl;
-      receipt(cust_id, new_name, total, ordered);
+      ordered_count++;
 
-      // store price in the kernel & open vma driver is sys/kernel
-      #if __unix__
-        // ordered is a string, and we must convert it to a char*
-        set_items_to_kern(total, &ordered[0u]);
-        read_sys();
-      #endif
+      if(ordered_count < 2) {
+        std::cout << "Storing receipt to text file.." << std::endl << std::endl;
+        receipt(cust_id, new_name, total, ordered);
+
+        // store price in the kernel & open vma driver is sys/kernel
+        #if __unix__
+          // ordered is a string, and we must convert it to a char*
+          set_items_to_kern(total, &ordered[0u]);
+          read_sys();
+        #endif
+      } else {
+        std::cout << "Can only store to receipt once per session!" << std::endl
+                  << std::endl;
+      }
     } else if(menu_choice == "5") {
       exit(-1);
     } else if(menu_choice == "6") {
