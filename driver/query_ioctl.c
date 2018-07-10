@@ -8,11 +8,14 @@
 #include <linux/errno.h>
 #include <linux/uaccess.h>
 #include <linux/mm.h>
+#include <linux/interrupt.h>
+#include <asm/io.h>
 
 #include "query_ioctl.h"
 
-#define FIRST_MINOR 0
-#define MINOR_CNT 1
+#define FIRST_MINOR   0
+#define MINOR_CNT     1
+#define IRQ_N         1
 
 static dev_t dev;
 static struct cdev c_dev;
@@ -22,6 +25,20 @@ static int price = 0;
 static char *order;
 static int numberOfOpens = 0;
 
+
+// This is a keyboard interrupt handler => esc key gets pressed
+irq_handler_t irq_handler(int irq, void *dev_id, struct pt_regs *regs) {
+  static unsigned char scancode;
+
+  // read keyboard status
+  scancode = inb(0x60);
+
+  if((scancode == 0x1) || (scancode == 0x81)) {
+    printk("Orders-IOT: You caused an interrupt using `Esc` key!\n");
+  }
+
+  return (irq_handler_t) IRQ_HANDLED;
+}
 
 // VMA ops -> this only opens when mmap is opened at /sys/kernel/debug/
 void vma_open(struct vm_area_struct *vma) {
@@ -126,7 +143,7 @@ static struct file_operations query_fops = {
 };
 
 static int __init query_ioctl_init(void) {
-  int ret;
+  int ret, ret_irq;
   struct device *dev_ret;
 
 
@@ -160,6 +177,13 @@ static int __init query_ioctl_init(void) {
     return PTR_ERR(sys_kernel_debugger_f);
   }
 
+  // register interrupt
+  /* Request IRQ_N 1, the keyboard IRQ */
+  ret_irq = request_irq(IRQ_N, (irq_handler_t) irq_handler, IRQF_SHARED, "query_ioctl", (void*)(irq_handler));
+  if(ret_irq) {
+    printk(KERN_INFO "Query Driver: Can't get shared interrupt for keyboard\n");
+  }
+
   printk(KERN_INFO "Query VMA: Loaded successfully into /sys/kernel/debug/!\n");
   printk(KERN_INFO "Query Driver: Loaded successfully into /dev/!\n");
 
@@ -173,6 +197,9 @@ static void __exit query_ioctl_exit(void) {
   unregister_chrdev_region(dev, MINOR_CNT);
 
   debugfs_remove(sys_kernel_debugger_f);
+
+  // remove interrupt handler
+  free_irq(IRQ_N, (void*)(irq_handler));
 
   printk(KERN_ALERT "Query Driver: Removed from /dev/!\n");
 }
