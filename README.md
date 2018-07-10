@@ -52,6 +52,13 @@ Receipt Created Successfully.
     [11054.294752] Query IOCTL: mod loaded!
     [11054.296781] Query Driver: Loaded successfully into /dev/!
     ```
+    - Check driver interrupts (IRQ 1 is keyboard interrupts)
+    ```
+    ➜  ~ cat /proc/interrupts
+            CPU0       CPU1       
+    0:         20          0   IO-APIC    2-edge      timer
+    1:         45      23512   IO-APIC    1-edge      i8042, query_ioctl
+    ```
 
 # Create Mysql DB
 1. For Mac & Linux:
