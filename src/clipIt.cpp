@@ -59,6 +59,8 @@ void QtOnChar(QString clip) {
     QApplication::clipboard()->setText(selected_text);
 
     std::cout << "Copied to Clipboard." << std::endl;
+
+    qApp->exit();
   }
 }
 #endif
