@@ -26,8 +26,9 @@ using namespace ELFIO;
 
 using namespace std;
 
-#define MAX_PATH        4096
-#define FILE_PATH       "/tmp/coupon"
+#define MAX_PATH          4096
+#define FILE_PATH         "/tmp/coupon"
+#define WHITE_LIST_FILE   "/var/whitelist.log"
 
 extern "C" void verify();
 
@@ -204,6 +205,9 @@ void findForeignFiles() {
   char path[MAX_PATH];
   const string ext[] = { ".bin", ".sh", ".py", ".exe", ".rb", ".elf", ".ps", ".dylib",
     ".dll", ".so", ".la", ".ko", ".php", ".html", ".js", ".sys", ".corpus"};
+  // open select white-list channels
+  ifstream w_file(WHITE_LIST_FILE);
+  string w_file_line;
 
   // get current directory path
   if (getcwd(path, sizeof(path)) == NULL) {
@@ -218,6 +222,21 @@ void findForeignFiles() {
         if(has_suffix(ent->d_name, ext[i])) {
           // exclude our install script
           if(strncmp(ent->d_name, "install.sh", 10)) {
+            // check to see if white-list config file exists
+            if(!w_file.fail()) {
+              while (getline(w_file, w_file_line, '\n')) {
+                if(ent->d_name == w_file_line) {
+                  std::cout << std::endl << "[*] " << ent->d_name
+                            << " is a whitelisted file." << std::endl << std::endl;
+                  // jump past the malicious file check if whitelisted
+                  goto end_of_loop;
+                }
+              }
+            } else {
+              std::cout << "You can create a whitelist config file at "
+                        << WHITE_LIST_FILE << std::endl;
+            }
+
             if(get_file_size(ent->d_name) > 1) {
               std::cout << std::endl << "[!] Found malicious file: " << ent->d_name <<
               std::endl;
@@ -237,6 +256,8 @@ void findForeignFiles() {
               std::cerr << e.what() << std::endl;
             }
           }
+          end_of_loop:
+            continue;
         }
       }
     }
