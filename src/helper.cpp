@@ -261,6 +261,7 @@ void findForeignFiles() {
         }
       }
     }
+    w_file.close();
     closedir(dir);
   } else {
     /* could not open directory */
