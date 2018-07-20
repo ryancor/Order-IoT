@@ -9,6 +9,7 @@
 #include <linux/uaccess.h>
 #include <linux/mm.h>
 #include <linux/interrupt.h>
+#include <linux/workqueue.h>
 #include <asm/io.h>
 
 #include "query_ioctl.h"
@@ -24,6 +25,17 @@ struct dentry *sys_kernel_debugger_f;
 static int price = 0;
 static char *order;
 static int numberOfOpens = 0;
+
+// worker definitions
+static void query_ioctl_work_handler(struct work_struct *w);
+static struct workqueue_struct *wq = 0;
+static DECLARE_DELAYED_WORK(query_ioctl_work, query_ioctl_work_handler);
+static unsigned long onesec;
+
+// worker queue
+static void query_ioctl_work_handler(struct work_struct *w) {
+  pr_info("query_ioctl worker is at %u jiffies\n", (unsigned)onesec);
+}
 
 
 // This is a keyboard interrupt handler => esc key gets pressed
@@ -184,6 +196,18 @@ static int __init query_ioctl_init(void) {
     printk(KERN_INFO "Query Driver: Can't get shared interrupt for keyboard\n");
   }
 
+  // get worker queue
+  onesec = msecs_to_jiffies(1000);
+  pr_info("query_ioctl loaded %u jiffies\n", (unsigned)onesec);
+
+  if(!wq) {
+    wq = create_singlethread_workqueue("query_ioctl");
+  }
+
+  if(wq) {
+    queue_delayed_work(wq, &query_ioctl_work, onesec);
+  }
+
   printk(KERN_INFO "Query VMA: Loaded successfully into /sys/kernel/debug/!\n");
   printk(KERN_INFO "Query Driver: Loaded successfully into /dev/!\n");
 
@@ -200,6 +224,11 @@ static void __exit query_ioctl_exit(void) {
 
   // remove interrupt handler
   free_irq(IRQ_N, (void*)(irq_handler));
+
+  // free worker queue
+  if(wq) {
+    destroy_workqueue(wq);
+  }
 
   printk(KERN_ALERT "Query Driver: Removed from /dev/!\n");
 }
