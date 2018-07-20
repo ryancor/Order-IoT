@@ -59,6 +59,15 @@ Receipt Created Successfully.
     0:         20          0   IO-APIC    2-edge      timer
     1:         45      23512   IO-APIC    1-edge      i8042, query_ioctl
     ```
+    - Check driver worker queues
+    ```
+    ➜  ~ cat /proc/sched_debug | grep -i ioctl
+    runnable tasks:
+    task        PID     tree-key        switches   prio     wait-time    sum-exec        sum-sleep
+    ----------------------------------------------------------------------------------------------------------
+    query_ioctl 84406   1030267.359522   2         100      1.764102     0.053031        0.914911 0 0 /
+
+    ```
 
 # Create Mysql DB
 1. For Mac & Linux:
