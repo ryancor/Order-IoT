@@ -35,7 +35,7 @@
       }
       offset = ((*virt_addr % 4) + 3) << 9;
 
-      printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n\n\n", offset);
+      printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n", offset);
 
       // get kernel memory address
       kern_addr = (unsigned int *)mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, PAGE_SIZE);
@@ -47,8 +47,9 @@
         || (kern_addr[PAGE_SIZE/sizeof(int)-2] != (0xdead0000+PAGE_SIZE/sizeof(int)-2))
         || (kern_addr[PAGE_SIZE/sizeof(int)-1] != (0xbeef0000+PAGE_SIZE/sizeof(int)-1)))
       {
+        printf("\n-- Retrieving physical addresses from kernel bus --\n");
         printf("0x%x 0x%x\n", kern_addr[0], kern_addr[1]);
-        printf("0x%x 0x%x\n", kern_addr[PAGE_SIZE/sizeof(int)-2], kern_addr[PAGE_SIZE/sizeof(int)-1]);
+        printf("0x%x 0x%x\n\n", kern_addr[PAGE_SIZE/sizeof(int)-2], kern_addr[PAGE_SIZE/sizeof(int)-1]);
       }
 
       close(configfd);
