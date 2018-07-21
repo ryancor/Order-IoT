@@ -184,7 +184,7 @@ static int __init query_ioctl_init(void) {
     return PTR_ERR(dev_ret);
   }
 
-  // creates vma process in /sys/kernel/debug
+  // creates a kernel bus to userland to read virtual memory addresses
   if(IS_ERR(sys_kernel_debugger_f = debugfs_create_file("query_vma", 0644, NULL, NULL, &query_fops))) {
     return PTR_ERR(sys_kernel_debugger_f);
   }
