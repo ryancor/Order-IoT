@@ -20,20 +20,36 @@
   void read_sys() {
     if(getuid() == 0) {
       int configfd;
-      int *address, offset;
+      int *virt_addr, offset;
+      unsigned int *kern_addr;
 
-      configfd = open(KERNEL_FILE, O_RDWR);
+      configfd = open(KERNEL_BUS_FILE, O_RDWR);
       if(configfd < 0) {
         perror("open");
       }
 
-      // get address from vma in sys/kernel
-      address = (int*)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, 0);
-      if(address == MAP_FAILED) {
+      // get virtual memory address in sys/kernel using drivers kernel bus to userland
+      virt_addr = (int*)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, 0);
+      if(virt_addr == MAP_FAILED) {
         perror("mmap");
       }
-      offset = ((*address % 4) + 3) << 9;
-      printf("\n\nSending string to kernel at a mapping size of %d/kb\n\n\n", offset);
+      offset = ((*virt_addr % 4) + 3) << 9;
+
+      printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n\n\n", offset);
+
+      // get kernel memory address
+      kern_addr = mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, PAGE_SIZE);
+      if(kern_addr == MAP_FAILED) {
+        perror("mmap");
+      }
+
+      if((kern_addr[0] != 0xdead0000) || (kern_addr[1] != 0xbeef0000)
+        || (kern_addr[PAGE_SIZE/sizeof(int)-2] != (0xdead0000+PAGE_SIZE/sizeof(int)-2))
+        || (kern_addr[PAGE_SIZE/sizeof(int)-1] != (0xbeef0000+PAGE_SIZE/sizeof(int)-1)))
+      {
+        printf("0x%x 0x%x\n", kern_addr[0], kern_addr[1]);
+        printf("0x%x 0x%x\n", kern_addr[PAGE_SIZE/sizeof(int)-2], kern_addr[PAGE_SIZE/sizeof(int)-1]);
+      }
 
       close(configfd);
     }
