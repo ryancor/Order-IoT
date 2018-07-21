@@ -29,7 +29,7 @@
       }
 
       // get virtual memory address in sys/kernel using drivers kernel bus to userland
-      virt_addr = (int*)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, 0);
+      virt_addr = (int *)mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, 0);
       if(virt_addr == MAP_FAILED) {
         perror("mmap");
       }
@@ -38,7 +38,7 @@
       printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n\n\n", offset);
 
       // get kernel memory address
-      kern_addr = mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, PAGE_SIZE);
+      kern_addr = (unsigned int *)mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, PAGE_SIZE);
       if(kern_addr == MAP_FAILED) {
         perror("mmap");
       }
