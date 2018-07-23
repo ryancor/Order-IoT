@@ -117,7 +117,8 @@
       }
       offset = ((*virt_addr % 4) + 3) << 9;
 
-      printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n", offset);
+      printf("\n\nRetrieving virtual memory address from kernel bus at a mapping");
+      printf("size of %d/kb @ 0x%p\n", offset, virt_addr);
 
       read_write_proc();
 
