@@ -5,7 +5,7 @@ ifeq ($(OS),Linux)
 	DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -DQT_SHARED
 	INCPATH       = -I/usr/share/qt4/mkspecs/linux-g++-64 -I. -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtGui -I/usr/include/qt4 -I. -Ilib -Iinclude -I.
 	CXXFLAGS      = -Wno-missing-field-initializers -Wno-missing-braces -m64 -pipe -O2 -Wall -W -D_REENTRANT $(DEFINES) $(INCPATH)
-	LDFLAGS       = -m64 -Wl,-O1
+	LDFLAGS       = -pedantic -m64 -Wl,-O1
 	LDLIBS        = -L/usr/lib/x86_64-linux-gnu -lQtGui -lQtCore -lpthread
 
 	CFLAGS=-lsfml-network -lsfml-system -lssl -lcrypto -I. -Wall -L $(PWD)/lib -Wl,-rpath=$(PWD)/lib/ -lpal
