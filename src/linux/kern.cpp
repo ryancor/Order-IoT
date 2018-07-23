@@ -5,10 +5,13 @@
   #include <errno.h>
   #include <fcntl.h>
   #include <unistd.h>
+  #include <assert.h>
+  #include <string.h>
   #include <sys/mman.h>
   #include <sys/types.h>
   #include <sys/ioctl.h>
 
+  #include "common.hpp"
   #include "../../driver/query_ioctl.h"
   #include "../../include/kern.hpp"
 
@@ -17,11 +20,90 @@
   int qd_fd;
   query_arg_t q;
 
+  enum { BUFFER_SIZE = 4 };
+
+  void read_write_proc() {
+    // for orderIOT_mmap proc
+    // get kernel memory address
+    // get virtual memory address in /proc using drivers kernel bus to userland
+    int proc_fd;
+    long page_size;
+    char *address1, *address2;
+    char buf[BUFFER_SIZE];
+    uintptr_t paddr;
+
+    page_size = sysconf(_SC_PAGE_SIZE);
+
+    proc_fd = open(KERNEL_BRIDGE_FILE, O_RDWR | O_SYNC);
+    if(proc_fd < 0) {
+      perror("open");
+      assert(0);
+    }
+
+    /* mmap twice for double fun. */
+    address1 = (char*)mmap(NULL, page_size, PROT_READ | PROT_WRITE, MAP_SHARED, proc_fd, 0);
+    if(address1 == MAP_FAILED) {
+      perror("mmap");
+      assert(0);
+    }
+
+    address2 = (char*)mmap(NULL, page_size, PROT_READ | PROT_WRITE, MAP_SHARED, proc_fd, 0);
+    if(address2 == MAP_FAILED) {
+      perror("mmap");
+      assert(0);
+    }
+
+    assert(address1 != address2);
+
+    /* Read and modify memory. */
+    assert(!strcmp(address1, "dead"));
+    /* vm_fault */
+    assert(!strcmp(address2, "dead"));
+    /* vm_fault */
+    strcpy(address1, "beef");
+    /* Also modified. So both virtual addresses point to the same physical address. */
+    assert(!strcmp(address2, "beef"));
+
+    assert(!virt_to_phys_user(&paddr, getpid(), (uintptr_t)address1));
+    printf("paddr1 = 0x%jx\n", (uintmax_t)paddr);
+
+    /* Check that modifications made from userland are also visible from the kernel. */
+    ssize_t r = read(proc_fd, buf, BUFFER_SIZE);
+    if(r == -1) {
+      assert(0);
+    } else {
+      assert(!memcmp(buf, "beef", BUFFER_SIZE));
+    }
+
+    /* Modify the data from the kernel, and check that the change is visible from userland. */
+    ssize_t w = write(proc_fd, "c0de", 4);
+    if(w == -1) {
+      assert(0);
+    } else {
+      assert(!strcmp(address1, "c0de"));
+      assert(!strcmp(address2, "c0de"));
+    }
+
+    /* Cleanup. */
+    if (munmap(address1, page_size)) {
+      perror("munmap");
+      assert(0);
+    }
+
+    if (munmap(address2, page_size)) {
+      perror("munmap");
+      assert(0);
+    }
+    printf("\n\n");
+
+    close(proc_fd);
+  }
+
   void read_sys() {
     if(getuid() == 0) {
+      // for query_vma proc
       int configfd;
       int *virt_addr, offset;
-      unsigned int *kern_addr;
 
       configfd = open(KERNEL_BUS_FILE, O_RDWR);
       if(configfd < 0) {
@@ -37,20 +119,7 @@
 
       printf("\n\nRetrieving virtual memory address from kernel bus at a mapping size of %d/kb\n", offset);
 
-      // get kernel memory address
-      kern_addr = (unsigned int *)mmap(0, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, configfd, PAGE_SIZE);
-      if(kern_addr == MAP_FAILED) {
-        perror("mmap");
-      }
-
-      if((kern_addr[0] != 0xdead0000) || (kern_addr[1] != 0xbeef0000)
-        || (kern_addr[PAGE_SIZE/sizeof(int)-2] != (0xdead0000+PAGE_SIZE/sizeof(int)-2))
-        || (kern_addr[PAGE_SIZE/sizeof(int)-1] != (0xbeef0000+PAGE_SIZE/sizeof(int)-1)))
-      {
-        printf("\n-- Retrieving physical addresses from kernel bus --\n");
-        printf("0x%x 0x%x\n", kern_addr[0], kern_addr[1]);
-        printf("0x%x 0x%x\n\n", kern_addr[PAGE_SIZE/sizeof(int)-2], kern_addr[PAGE_SIZE/sizeof(int)-1]);
-      }
+      read_write_proc();
 
       close(configfd);
     }
