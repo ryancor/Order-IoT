@@ -13,3 +13,10 @@ driver/query_ioctl.mod.c
 driver/query_ioctl.mod.o
 driver/query_ioctl.o
 driver/query_ioctl.ko
+driver/.kernel_bus.ko.cmd
+driver/.kernel_bus.mod.o.cmd
+driver/.kernel_bus.o.cmd
+driver/kernel_bus.mod.c
+driver/kernel_bus.mod.o
+driver/kernel_bus.o
+driver/kernel_bus.ko
