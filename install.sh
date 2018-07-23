@@ -4,7 +4,9 @@ if [ "${OS}" = "Linux" ] ; then
   make
   # Remove drive (if exists) before installing
   sudo rmmod query_ioctl
+  sudo rmmod kernel_bus
   sudo insmod query_ioctl.ko
+  sudo insmod kernel_bus.ko
   # change ryancor to your local username
   sudo chown ryancor:ryancor /dev/query_driver
   cd ../
