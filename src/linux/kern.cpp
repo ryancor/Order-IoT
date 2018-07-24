@@ -64,8 +64,30 @@
     /* Also modified. So both virtual addresses point to the same physical address. */
     assert(!strcmp(address2, "beef"));
 
+    // once address1 changes, address2 automatically changes
     assert(!virt_to_phys_user(&paddr, getpid(), (uintptr_t)address1));
-    printf("paddr1 = 0x%jx\n", (uintmax_t)paddr);
+    printf("paddr1 = 0x%jx : 0x", (uintmax_t)paddr);
+    // convert virtual addrss to hex value
+    for(int j = 0; j < 4; j++) {
+      /*
+        [0x00415714]> x @ r13
+        - offset -       0 1  2 3  4 5  6 7  8 9  A B  C D  E F  0123456789ABCDEF
+        0x7f4e5d109000  6265 6566 0000 0000 0000 0000 0000 0000  beef.
+      */
+      printf("%x", (unsigned int)(unsigned char)*(address1+j));
+    }
+    // char pointer to hex literal
+    unsigned int out;
+    sscanf(address1, "%x", &out);
+    /*
+      [0x00415714]> pd 2
+      0x0041571e    e87deffeff   call sym.imp.sscanf
+      sym.imp.sscanf()
+      0x00415723  b  8b542404     mov edx, [rsp+0x4]
+      [0x00415714]> dr
+      rdx = 0x0000beef
+    */
+    printf(" == 0x%x0000\n", out);
 
     /* Check that modifications made from userland are also visible from the kernel. */
     ssize_t r = read(proc_fd, buf, BUFFER_SIZE);
