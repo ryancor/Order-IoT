@@ -152,7 +152,8 @@
         perror("open driver file");
       }
 
-      void *src = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, driverfd, 0)
+      // using driver from /dev/query_driver to get mapped to bin
+      void *src = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, driverfd, 0);
       if(src == MAP_FAILED) {
         perror("mmap");
       }
@@ -163,12 +164,12 @@
 
         dfd = open("dest.bin", O_RDWR | O_CREAT, 0777);
         // copy memory of driver into new file
-        if((dst = mmap(0, struct.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, dfd, 0)) == (caddr_t) -1) {
+        if((dst = mmap(0, statbuf.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, dfd, 0)) == (caddr_t) -1) {
           printf("mmap error for output");
         } else {
-          memcpy(dst, src, struct.st_size);
-          munmap(src, struct.st_size);
-          munmap(dest, struct.st_size);
+          memcpy(dst, src, statbuft.st_size);
+          munmap(src, statbuf.st_size);
+          munmap(dest, statbuf.st_size);
           close(dfd);
         }
       }
