@@ -8,6 +8,7 @@
   #include <assert.h>
   #include <string.h>
   #include <sys/mman.h>
+  #include <sys/stat.h>
   #include <sys/types.h>
   #include <sys/ioctl.h>
 
@@ -124,12 +125,15 @@
   void read_sys() {
     if(getuid() == 0) {
       // for query_vma proc
-      int configfd;
-      int *virt_addr, offset;
+      int configfd, driverfd;
+      int *virt_addr, offset, dfd;
+      int32_t irq_count;
+      char *dst;
+      struct stat statbuf;
 
       configfd = open(KERNEL_BUS_FILE, O_RDWR);
       if(configfd < 0) {
-        perror("open");
+        perror("open bus file");
       }
 
       // get virtual memory address in sys/kernel using drivers kernel bus to userland
@@ -142,6 +146,34 @@
       printf("\n\nRetrieving virtual memory address from kernel bus at a mapping");
       printf("size of %d/kb @ 0x%p\n", offset, virt_addr);
 
+      // user-space driver : irq count
+      driverfd = open(DRIVER_FILE, O_RDWR);
+      if(driverfd < 0) {
+        perror("open driver file");
+      }
+
+      void *src = mmap(NULL, PAGE_SIZE, PROT_READ | PROT_WRITE, MAP_SHARED, driverfd, 0)
+      if(src == MAP_FAILED) {
+        perror("mmap");
+      }
+
+      // always read 1 byte
+      while(read(driverfd, &irq_count, 1) == 1) {
+        printf("IRQ Number %d\n", irq_count);
+
+        dfd = open("dest.bin", O_RDWR | O_CREAT, 0777);
+        // copy memory of driver into new file
+        if((dst = mmap(0, struct.st_size, PROT_READ | PROT_WRITE, MAP_SHARED, dfd, 0)) == (caddr_t) -1) {
+          printf("mmap error for output");
+        } else {
+          memcpy(dst, src, struct.st_size);
+          munmap(src, struct.st_size);
+          munmap(dest, struct.st_size);
+          close(dfd);
+        }
+      }
+
+      // call memory address : VMA
       read_write_proc();
 
       close(configfd);
